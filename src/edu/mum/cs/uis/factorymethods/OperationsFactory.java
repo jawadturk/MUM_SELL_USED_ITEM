@@ -27,5 +27,12 @@ public class OperationsFactory {
 		Validate.validateAddCategory(categoryName);
 		new UsedItemsDaoImpl().addCategory(categoryName);
 	}
+	
+	public static void addItem()throws RuleException
+	
+	{
+//		Validate.validateItemData(title, description, price, img, cat);
+		
+	}
 
 }

@@ -1,5 +1,11 @@
 package edu.mum.cs.uis.ruleset;
 
+import java.time.LocalDate;
+
+import edu.mum.cs.uis.model.Category;
+import edu.mum.cs.uis.model.Image;
+import edu.mum.cs.uis.model.Status;
+import edu.mum.cs.uis.utils.Utils;;
 public class Validate {
 	
 	public static void validateLoginCredentials(String userName,String password) throws RuleException
@@ -47,8 +53,54 @@ public class Validate {
 				}
 	}
 	
-	public static void validateItemData()
+	public static void validateItemData( String title,
+	 String description,
+	 String price,
+	 Image img,
+	 Category cat)throws RuleException
 	{
+		if(title.trim().isEmpty() ||
+				description.trim().isEmpty()||
+				price.trim().isEmpty()
+				   ) {
+					throw new RuleException("All fields must be non-empty!");
+				}
+		
+		if(img==null)
+		{
+			throw new RuleException("You must choose an image.");
+		}
+		
+		if(cat==null)
+		{
+			throw new RuleException("You must choose Category.");
+		}
+		checkIfPriceIsFloatWithTwoPlaces(price);
+				
 		
 	}
+	
+    private static void checkIfPriceIsFloatWithTwoPlaces(String text) throws RuleException
+    {
+        
+        if(Utils.doubleChecker(text))
+        {
+            if(Double.parseDouble(text)%1!=0)
+            {
+                
+            
+         if(text.split("\\.")[1].length()!=2)
+         {
+            throw new RuleException("Price must contain 2 decimal places");  
+         }
+         else{
+             // do nothing
+         }
+          }else{
+               throw new RuleException("Price must contain 2 decimal places");   
+            }  
+        }else{
+            throw new RuleException("Price is not floating point number");
+       }
+    }
 }
