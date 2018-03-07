@@ -8,8 +8,8 @@ public class Car extends Item {
 	private int year;
 	private String model;
 	public Car(int id, String title, String description, double price, LocalDate creationDate, Status status, Image img,
-			Category cat,Double mileage, int year, String model) {
-		super(id, title, description, price, creationDate, status, img,cat);
+			Category cat,Double mileage, int year, String model, int userId) {
+		super(id, title, description, price, creationDate, status, img,cat, userId);
 		this.mileage = mileage;
 		this.year = year;
 		this.model = model;

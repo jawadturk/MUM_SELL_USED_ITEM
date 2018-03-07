@@ -12,7 +12,9 @@ public class Item {
 	private Status status;
 	private Image img;
 	private Category cat;
-	public Item(int id, String title, String description, double price, LocalDate creationDate, Status status,Image img,Category cat) {
+	private int userId;
+	
+	public Item(int id, String title, String description, double price, LocalDate creationDate, Status status,Image img,Category cat, int userId) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -22,6 +24,7 @@ public class Item {
 		this.status = Status.CREATED;
 		this.img = img;
 		this.cat=cat;
+		this.userId=userId;
 	}
 	
 	

@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.mum.cs.uis.model.Admin;
+import edu.mum.cs.uis.model.Category;
+import edu.mum.cs.uis.model.Item;
 import edu.mum.cs.uis.model.User;
 
 
@@ -66,7 +69,13 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 				String firstName = rs.getString("FIRSTNAME");
 				String lastName = rs.getString("LASTNAME");
 				boolean isAdmin = rs.getBoolean("ISADMIN");
-				User user = new User(firstName,lastName,userName,password,isAdmin);
+				
+				User user = null;
+				if(isAdmin)
+					user = new Admin(firstName,lastName,userName,password);
+				else
+					user = new User(firstName,lastName,userName,password,isAdmin);
+				
 				return user;
 			}
 			closeResultSet(rs);
@@ -87,7 +96,7 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 	}	
 
 
-	public void addCategory(String name) {
+	public boolean addCategory(String name) {
 		
 		Connection conn = dbConnection.getConnection();
 		PreparedStatement pstmt = null;
@@ -96,7 +105,7 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 			pstmt = conn.prepareStatement("insert into CATEGORIES (NAME) values (?)");
 			pstmt.setString(1, name);
 			pstmt.executeUpdate();
-			
+			return true;
 		} catch(SQLException sqlEx) {
 			printSQLException(sqlEx);
 		} finally {
@@ -110,6 +119,46 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
                 printSQLException(sqle);
             }
         }
+		return false;
+	}
+	
+	public List<Category> getCategories() {
+		Connection conn = dbConnection.getConnection();
+		Statement stmt = null;
+		ResultSet rs = null;
+		List<Category> categories = new ArrayList<Category>();
+		
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery("SELECT * from CATEGORIES");
+			while(rs.next()) {
+				
+				int id = rs.getInt("CATID");
+				String name = rs.getString("NAME");
+				Category cat = new Category(id,name);
+				categories.add(cat);
+			}
+			closeResultSet(rs);
+		} catch(SQLException sqlEx) {
+			printSQLException(sqlEx);
+		} finally {
+            // release resources
+            try {
+                if (stmt != null) {
+                	stmt.close();
+                	stmt = null;
+                }
+            } catch (SQLException sqle) {
+                printSQLException(sqle);
+            }
+        }
+		return categories;
+	}	
+	
+	@Override
+	public boolean addItem(Item item) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
     public static void printSQLException(SQLException e)
@@ -125,7 +174,6 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
             e = e.getNextException();
         }
     }	
-    
     private void closeResultSet(ResultSet rs) {
         // ResultSet
         try {
@@ -137,7 +185,6 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
             printSQLException(sqle);
         }
     }
-    
     public static void closeDBConnection(Connection conn) {
         try {
             if (conn != null) {
@@ -159,10 +206,20 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 //    	dao.registerNewUser(user);
     	
 //    	System.out.println(dao.validateLogin("userName", "password"));
-    	System.out.println(dao.validateLogin("userName1", "password"));
-//    	dao.addCategory("VEHICLE");
+//    	System.out.println(dao.validateLogin("userName1", "password"));
+    	dao.addCategory("VEHICLE");
+    	dao.addCategory("ELECTRONICS");
+    	dao.addCategory("LAPTOP1");
+    	
+    	List<Category> cats = new ArrayList<>();
+    	cats = dao.getCategories();
+    	for(Category c:cats) {
+    		System.out.println(c);
+    	}
     	
     	
 	}
+
+	
 
 }
