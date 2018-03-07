@@ -2,29 +2,24 @@ package edu.mum.cs.uis.ruleset;
 
 public class Validate {
 	
-	public static void validateLoginCredentials(String email,String password) throws RuleException
+	public static void validateLoginCredentials(String userName,String password) throws RuleException
 	{
 		
-		if(email.trim().isEmpty() ||
+		if(userName.trim().isEmpty() ||
 				password.trim().isEmpty()) {
 			throw new RuleException("All fields must be non-empty!");
 		}
 		
 	}
 	
-	public static void validateSignUpCredentials(String email,String password,String firstName, String lastName) throws RuleException
+	public static void validateSignUpCredentials(String userName,String password,String firstName, String lastName) throws RuleException
 	{
 		
-		if(email.trim().isEmpty() ||
+		if(userName.trim().isEmpty() ||
 		   password.trim().isEmpty()||
 		   firstName.trim().isEmpty()||
 		   lastName.trim().isEmpty()) {
 			throw new RuleException("All fields must be non-empty!");
-		}
-		
-		if(!new EmailValidator().validate(email))
-		{
-			throw new RuleException("Email is not in the correct format.");
 		}
 		
 		if(password.trim().length()<8)
@@ -44,4 +39,11 @@ public class Validate {
 	}
 	
 
+	public static void validateAddCategory(String category)throws RuleException
+	{
+		if(category.trim().isEmpty()
+				  ) {
+					throw new RuleException("category can't be empty.");
+				}
+	}
 }
