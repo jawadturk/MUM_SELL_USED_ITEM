@@ -34,7 +34,29 @@ public class User {
 	public void setItemsList(List<Item> itemsList) {
 		this.itemsList = itemsList;
 	}
-	
-	
+
+	public int getId() {
+		return id;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public List<Item> getItemsList() {
+		return itemsList;
+	}
 
 }
