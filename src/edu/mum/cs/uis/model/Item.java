@@ -9,10 +9,22 @@ public class Item {
 	private String description;
 	private double price;
 	private LocalDate creationDate;
-	
 	private Status status;
-	
 	private Image img;
+	private Category cat;
+	public Item(int id, String title, String description, double price, LocalDate creationDate, Status status,Image img,Category cat) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.price = price;
+		this.creationDate = creationDate;
+		this.status = Status.CREATED;
+		this.img = img;
+		this.cat=cat;
+	}
+	
+	
 	
 	
 	

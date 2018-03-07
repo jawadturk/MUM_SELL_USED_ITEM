@@ -4,7 +4,13 @@ public class Image {
 	
 	private int id;
 	private String path;
+
 	
+	public Image(int id, String path) {
+		super();
+		this.id = id;
+		this.path = path;
+	}
 	public int getId() {
 		return id;
 	}
