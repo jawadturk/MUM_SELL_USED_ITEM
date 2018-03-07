@@ -46,4 +46,9 @@ public class Validate {
 					throw new RuleException("category can't be empty.");
 				}
 	}
+	
+	public static void validateItemData()
+	{
+		
+	}
 }
