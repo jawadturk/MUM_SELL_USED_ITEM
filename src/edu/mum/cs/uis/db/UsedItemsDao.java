@@ -15,5 +15,6 @@ public interface UsedItemsDao {
 	public List<Category> getCategories();
 	
 	public boolean addItem(Item item);
+	
 
 }

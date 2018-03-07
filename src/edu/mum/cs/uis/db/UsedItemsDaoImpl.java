@@ -5,12 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.mum.cs.uis.model.Admin;
 import edu.mum.cs.uis.model.Category;
+import edu.mum.cs.uis.model.Image;
 import edu.mum.cs.uis.model.Item;
+import edu.mum.cs.uis.model.Status;
 import edu.mum.cs.uis.model.User;
 
 
@@ -157,7 +160,50 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 	
 	@Override
 	public boolean addItem(Item item) {
-		// TODO Auto-generated method stub
+		
+		Connection conn = dbConnection.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			
+			pstmt = conn.prepareStatement("insert into IMAGES (PATH) values (?)",Statement.RETURN_GENERATED_KEYS);
+			pstmt.setString(1, item.getImg().getPath());
+			pstmt.execute();
+			
+			ResultSet rs = pstmt.getGeneratedKeys();
+			int generatedKey = 0;
+			if (rs.next()) {
+			    generatedKey = rs.getInt(1);
+			}
+			System.out.println("Inserted record's ID: " + generatedKey);
+			
+			pstmt = conn.prepareStatement("insert into ITEMS (TITLE, DESCRIPTION,PRICE,CREATIONDATE,STATUS, USERID,CATID,IMGID) values (?, ?, ?, ?, ?,?,?,?)");
+			pstmt.setString(1, item.getTitle());
+			pstmt.setString(2, item.getDescription());
+			
+			pstmt.setDouble(3, item.getPrice());
+			pstmt.setDate(4, java.sql.Date.valueOf(item.getCreationDate()));
+			pstmt.setString(5, item.getStatus().toString());
+			
+			pstmt.setInt(6, item.getUserId());
+			pstmt.setInt(7, item.getCat().getId());
+			pstmt.setInt(8, generatedKey);
+			
+			pstmt.executeUpdate();
+			return true;
+			
+		} catch(SQLException sqlEx) {
+			printSQLException(sqlEx);
+		} finally {
+            // release resources
+            try {
+                if (pstmt != null) {
+                	pstmt.close();
+                	pstmt = null;
+                }
+            } catch (SQLException sqle) {
+                printSQLException(sqle);
+            }
+        }
 		return false;
 	}
 	
@@ -216,6 +262,13 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
     	for(Category c:cats) {
     		System.out.println(c);
     	}
+    	
+    	Image img = new Image(0, "/x/y/z");
+    	Category category = new Category(1, "VEHICLE");
+    	
+		Item item = new Item("title", "description", 25.5, LocalDate.now(), Status.CREATED, img , category, 1);
+		
+    	dao.addItem(item);
     	
     	
 	}
