@@ -2,8 +2,8 @@ package edu.mum.cs.uis.model;
 
 public class Admin extends User {
 
-	public Admin(int id, String firstName, String lastName, String userName, String password) {
-		super(id, firstName, lastName, userName, password);
+	public Admin(String firstName, String lastName, String userName, String password) {
+		super( firstName, lastName, userName, password,true);
 		// TODO Auto-generated constructor stub
 	}
 	
