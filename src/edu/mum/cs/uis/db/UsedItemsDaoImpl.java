@@ -207,9 +207,9 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
     	
 //    	System.out.println(dao.validateLogin("userName", "password"));
 //    	System.out.println(dao.validateLogin("userName1", "password"));
-    	dao.addCategory("VEHICLE");
-    	dao.addCategory("ELECTRONICS");
-    	dao.addCategory("LAPTOP1");
+//    	dao.addCategory("VEHICLE");
+//    	dao.addCategory("ELECTRONICS");
+//    	dao.addCategory("LAPTOP1");
     	
     	List<Category> cats = new ArrayList<>();
     	cats = dao.getCategories();
