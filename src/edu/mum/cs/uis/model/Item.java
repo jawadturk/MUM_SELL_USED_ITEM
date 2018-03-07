@@ -21,13 +21,23 @@ public class Item {
 		this.description = description;
 		this.price = price;
 		this.creationDate = creationDate;
-		this.status = Status.CREATED;
+		this.status = status;
 		this.img = img;
 		this.cat=cat;
 		this.userId=userId;
 	}
 	
-	
+	public Item( String title, String description, double price, LocalDate creationDate, Status status,Image img,Category cat, int userId) {
+		super();
+		this.title = title;
+		this.description = description;
+		this.price = price;
+		this.creationDate = creationDate;
+		this.status = status;
+		this.img = img;
+		this.cat=cat;
+		this.userId=userId;
+	}
 	
 	
 	
