@@ -319,8 +319,91 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
             }
         }
 		return items;
-		
 	}
+	
+	public Item getItemDetailsById(int itemId){
+		
+		Connection conn = dbConnection.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Item item = null;
+		
+		try {
+			String selectSQL = "SELECT itm.*, img.PATH, cat.NAME AS CATNAME from ITEMS itm,IMAGES img, CATEGORIES cat WHERE itm.IMGID = img.IMGID AND itm.CATID = cat.CATID AND itm.ITEMID = ?";
+			pstmt = conn.prepareStatement(selectSQL);
+			pstmt.setInt(1, itemId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				
+				int id = rs.getInt("ITEMID");
+				String title = rs.getString("TITLE");
+				String description = rs.getString("DESCRIPTION");
+				Double price = rs.getDouble("PRICE");
+				Date creationDate = rs.getDate("CREATIONDATE");
+				
+				String stts = rs.getString("STATUS");
+				Status status = Status.valueOf(stts);
+				
+				int userId = rs.getInt("USERID");
+				
+				int catId = rs.getInt("CATID");
+				String catName = rs.getString("CATNAME");
+				Category cat = new Category(catId, catName);
+				
+				int imgId = rs.getInt("IMGID");
+				String imgPath = rs.getString("PATH");
+				Image img = new Image(imgId, imgPath);
+				
+				item = new Item(title, description, price, creationDate.toLocalDate(), status, img, cat, userId);
+			}
+			closeResultSet(rs);
+		} catch(SQLException sqlEx) {
+			printSQLException(sqlEx);
+		} finally {
+            // release resources
+            try {
+                if (pstmt != null) {
+                	pstmt.close();
+                	pstmt = null;
+                }
+            } catch (SQLException sqle) {
+                printSQLException(sqle);
+            }
+        }
+		return item;
+	}
+	
+	@Override
+	public boolean updateItemStatusById(int itemId, Status status) {
+		Connection conn = dbConnection.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement("update ITEMS set STATUS = ? WHERE ITEMID = ?");
+			pstmt.setString(1, status.toString());
+			pstmt.setInt(2, itemId);
+			
+			pstmt.executeUpdate();
+			return true;
+			
+		} catch(SQLException sqlEx) {
+			printSQLException(sqlEx);
+		} finally {
+            // release resources
+            try {
+                if (pstmt != null) {
+                	pstmt.close();
+                	pstmt = null;
+                }
+            } catch (SQLException sqle) {
+                printSQLException(sqle);
+            }
+        }
+		return false;
+	}
+
+	
 	
     public static void printSQLException(SQLException e)
     {
@@ -390,13 +473,20 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 //    		System.out.println(item);
 //    	}
     	
+//    	List<Item> items = dao.getAllItemsByUserId(1);
+//    	for(Item item:items) {
+//    		System.out.println(item);
+//    	}
+    	
+//    	System.out.println(dao.getItemDetailsById(101));
+    	
+    	
+    	System.out.println(dao.updateItemStatusById(101,Status.REJECTED));
+    	
     	List<Item> items = dao.getAllItemsByUserId(1);
     	for(Item item:items) {
     		System.out.println(item);
     	}
-    	
-    	
-    	
 	}
     
     public static UsedItemsDaoImpl getInstance() {
@@ -405,6 +495,7 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 		return instance;
 	}
 
+	
 	
 
 }

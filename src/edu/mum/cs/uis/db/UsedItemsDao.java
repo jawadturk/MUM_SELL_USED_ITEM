@@ -16,9 +16,10 @@ public interface UsedItemsDao {
 	public List<Category> getCategories();
 	
 	public boolean addItem(Item item);
-	
 	public List<Item> getAllItemsByStatus(Status status);
 	public List<Item> getAllItemsByUserId(int userId);
+	public Item getItemDetailsById(int itemId);
+	public boolean updateItemStatusById(int itemId, Status status);
 	
 
 }
