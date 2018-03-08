@@ -63,6 +63,12 @@ public class User {
 		return itemsList;
 	}
 	
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+	
+	
+	
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
