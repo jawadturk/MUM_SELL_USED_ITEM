@@ -266,6 +266,62 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 		
 	}
 	
+	public List<Item> getAllItemsByUserId(int userId){
+		
+		Connection conn = dbConnection.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Item> items = new ArrayList<Item>();
+		
+		try {
+			String selectSQL = "SELECT itm.*, img.PATH, cat.NAME AS CATNAME from ITEMS itm,IMAGES img, CATEGORIES cat WHERE itm.IMGID = img.IMGID AND itm.CATID = cat.CATID AND itm.USERID = ?";
+			pstmt = conn.prepareStatement(selectSQL);
+			pstmt.setInt(1, userId);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				int id = rs.getInt("ITEMID");
+				String title = rs.getString("TITLE");
+				String description = rs.getString("DESCRIPTION");
+				Double price = rs.getDouble("PRICE");
+				Date creationDate = rs.getDate("CREATIONDATE");
+				
+				String stts = rs.getString("STATUS");
+				Status status = Status.valueOf(stts);
+//				int userId = rs.getInt("USERID");
+				
+				int catId = rs.getInt("CATID");
+				String catName = rs.getString("CATNAME");
+				Category cat = new Category(catId, catName);
+				
+				int imgId = rs.getInt("IMGID");
+				String imgPath = rs.getString("PATH");
+				Image img = new Image(imgId, imgPath);
+				
+				Item item = new Item(title, description, price, creationDate.toLocalDate(), status, img, cat, userId);
+				
+				items.add(item);
+			}
+			closeResultSet(rs);
+		} catch(SQLException sqlEx) {
+			printSQLException(sqlEx);
+		} finally {
+            // release resources
+            try {
+                if (pstmt != null) {
+                	pstmt.close();
+                	pstmt = null;
+                }
+            } catch (SQLException sqle) {
+                printSQLException(sqle);
+            }
+        }
+		return items;
+		
+	}
+	
     public static void printSQLException(SQLException e)
     {
         while (e != null)
@@ -329,7 +385,12 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 //		Item item = new Item("title1", "description1", 30, LocalDate.now(), Status.APPROVED, img , category, 1);
 //    	dao.addItem(item);
     	
-    	List<Item> items = dao.getAllItemsByStatus(Status.CREATED);
+//    	List<Item> items = dao.getAllItemsByStatus(Status.CREATED);
+//    	for(Item item:items) {
+//    		System.out.println(item);
+//    	}
+    	
+    	List<Item> items = dao.getAllItemsByUserId(1);
     	for(Item item:items) {
     		System.out.println(item);
     	}

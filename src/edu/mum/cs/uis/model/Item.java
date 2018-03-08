@@ -113,7 +113,9 @@ public class Item {
 	
 	@Override
 	public String toString() {
-		return "id: " + id + ", title: " + title + ", description: " + description + ", img.path: " + img.getPath() + ", cat.name: " + cat.getName();
+		return "id: " + id + ", title: " + title + ", description: " + description + ", img.path: " + 
+					img.getPath() + ", cat.name: " + cat.getName() + ", status: " + status.toString() +
+					", userId: " + userId;
 	}
 	
 	

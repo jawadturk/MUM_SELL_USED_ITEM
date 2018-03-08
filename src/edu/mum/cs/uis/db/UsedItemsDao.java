@@ -18,6 +18,7 @@ public interface UsedItemsDao {
 	public boolean addItem(Item item);
 	
 	public List<Item> getAllItemsByStatus(Status status);
+	public List<Item> getAllItemsByUserId(int userId);
 	
 
 }
