@@ -1,6 +1,5 @@
 package edu.mum.cs.uis.view;
 
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 
