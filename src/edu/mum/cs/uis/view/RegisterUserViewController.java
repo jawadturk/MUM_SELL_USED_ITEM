@@ -34,12 +34,18 @@ package edu.mum.cs.uis.view;
  
 import java.io.IOException;
 
+import edu.mum.cs.uis.factorymethods.OperationsFactory;
+import edu.mum.cs.uis.model.User;
+import edu.mum.cs.uis.ruleset.RuleException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
  
 public class RegisterUserViewController {
@@ -49,6 +55,17 @@ public class RegisterUserViewController {
 	private Button registerBtn;
 	@FXML
 	private Button returnLoginBtn;
+	@FXML
+	private TextField firstNameField;
+	@FXML
+	private TextField lastNameField;
+	@FXML
+	private TextField userNameField;
+	@FXML
+	private TextField passwordField;
+	@FXML
+	private TextField confirmPasswordField;
+	
 	
     @FXML protected void handleRegisterButtonAction(ActionEvent event) {
 		Stage stage = null;
@@ -56,26 +73,44 @@ public class RegisterUserViewController {
 
 		if (event.getSource() == registerBtn) {
 			stage = (Stage) registerBtn.getScene().getWindow();
-			new UserHomeView(stage);
+			try {
+				
+				/*if(!passwordField.getText().equals(confirmPasswordField.getText())) {
+					throw new RuleException("Password and Confirm Password Should Match!");
+				}*/
+				
+				User loggedinUser = OperationsFactory.register(userNameField.getText(), 
+						passwordField.getText(), firstNameField.getText(), 
+						lastNameField.getText());
+				
+				if(loggedinUser == null) {
+					throw new RuleException("Invalid User Register!");
+				}else if(loggedinUser.isAdmin()){
+					
+				}else {
+					new UserHomeView(stage);
+				}
+				
+				LoggedinSession.setLoggedinUser(loggedinUser);
+				
+			} catch (RuleException e) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("User Register Error");
+//				alert.setHeaderText("Look, an Error Dialog");
+				alert.setContentText(e.getMessage());
+				alert.showAndWait();
+			}
+			
+			
 		}
     }
 
     
     @FXML protected void handleReturnButtonAction(ActionEvent event) {
-		Stage stage;
+		Stage stage = null;
 		Parent root = null;
 
-		if (event.getSource() == registerBtn) {
-			// get reference to the button's stage
-			stage = (Stage) registerBtn.getScene().getWindow();
-			// load up OTHER FXML document
-			try {
-				root = FXMLLoader.load(getClass().getResource("FXML2.fxml"));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
+		if (event.getSource() == returnLoginBtn) {
 			stage = (Stage) returnLoginBtn.getScene().getWindow();
 			try {
 				root = FXMLLoader.load(getClass().getResource("login_view.fxml"));

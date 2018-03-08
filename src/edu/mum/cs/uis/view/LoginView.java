@@ -32,6 +32,7 @@
 
 package edu.mum.cs.uis.view;
 
+import edu.mum.cs.uis.db.DBConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -65,6 +66,16 @@ public class LoginView extends Application {
 		registerStage = new RegisterUserView(loginWindow);
 	}*/
     
-	
+	@Override
+	public void init() throws Exception {
+		// TODO Auto-generated method stub
+		super.init();
+		try {
+			DBConnection.getInstance();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 }

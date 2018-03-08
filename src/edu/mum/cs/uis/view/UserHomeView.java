@@ -132,9 +132,25 @@ public class UserHomeView extends Stage{
         borderPane.prefHeightProperty().bind(scene.heightProperty());
         borderPane.prefWidthProperty().bind(scene.widthProperty());
         
+        String welcomeStr = "Welcome";
+        try {
+        	welcomeStr = "Welcome " 
+            		+ LoggedinSession.getLoggedinUser().getLastName() 
+            		+ ", " + LoggedinSession.getLoggedinUser().getFirstName();
+        }catch (Exception e) {
+			e.printStackTrace();
+		}
         
+        Label welcomeLbl = new Label(welcomeStr);
+        welcomeLbl.setStyle("-fx-text-inner-color: blue;-fx-font-weight: bold;");
+        HBox welcomeLblBox = new HBox();
+        welcomeLblBox.setAlignment(Pos.CENTER);
+        welcomeLblBox.setPadding(new Insets(5,0,5,0));
+        welcomeLblBox.getChildren().add(welcomeLbl);
         
+        borderPane.setTop(welcomeLblBox);
         borderPane.setCenter(tabPane);
+        
 //        borderPane.setTop(addItemBox);
         
         

@@ -17,19 +17,19 @@
   <Label text="First Name:" 
       GridPane.columnIndex="0" GridPane.rowIndex="1" />
   
-  <TextField 
+  <TextField fx:id="firstNameField"
       GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
   <Label text="Last Name:" 
       GridPane.columnIndex="0" GridPane.rowIndex="2" />
   
-  <TextField 
+  <TextField fx:id="lastNameField"
       GridPane.columnIndex="1" GridPane.rowIndex="2" />
       
     <Label text="User Name:" 
       GridPane.columnIndex="0" GridPane.rowIndex="3" />
   
-  <TextField 
+  <TextField fx:id="userNameField"
       GridPane.columnIndex="1" GridPane.rowIndex="3" />
       
   <Label text="Password:" 

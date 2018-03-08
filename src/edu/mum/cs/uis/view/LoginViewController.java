@@ -34,12 +34,18 @@ package edu.mum.cs.uis.view;
 
 import java.io.IOException;
 
+import edu.mum.cs.uis.factorymethods.OperationsFactory;
+import edu.mum.cs.uis.model.User;
+import edu.mum.cs.uis.ruleset.RuleException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class LoginViewController {
@@ -48,7 +54,11 @@ public class LoginViewController {
 	private Button signInBtn;
 	@FXML
 	private Button signUpBtn;
-
+	@FXML
+	private TextField usernameField;
+	@FXML
+	private TextField passwordField;
+	
 	@FXML
 	protected void handleSubmitButtonAction(ActionEvent event) {
 		Stage stage = null;
@@ -56,7 +66,31 @@ public class LoginViewController {
 
 		if (event.getSource() == signInBtn) {
 			stage = (Stage) signInBtn.getScene().getWindow();
-			new UserHomeView(stage);
+			/*new UserHomeView(stage);*/
+			
+			try {
+				User loggedinUser = OperationsFactory.logIn(usernameField.getText(), passwordField.getText());
+				
+				if(loggedinUser == null) {
+					throw new RuleException("Invalid User Login!");
+				}else if(loggedinUser.isAdmin()){
+					
+				}else {
+					new UserHomeView(stage);
+				}
+				
+				LoggedinSession.setLoggedinUser(loggedinUser);
+				
+			} catch (RuleException e) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("User Login Error");
+//				alert.setHeaderText("Look, an Error Dialog");
+				alert.setContentText(e.getMessage());
+				alert.showAndWait();
+			}
+			
+
+			
 		}
 		// create a new scene with root and set the stage
 		/*Scene scene = new Scene(root);
