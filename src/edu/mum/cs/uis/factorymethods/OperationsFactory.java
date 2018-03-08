@@ -6,6 +6,7 @@ import java.util.List;
 
 import edu.mum.cs.uis.db.UsedItemsDaoImpl;
 import edu.mum.cs.uis.model.Category;
+import edu.mum.cs.uis.model.Comment;
 import edu.mum.cs.uis.model.Image;
 import edu.mum.cs.uis.model.Item;
 import edu.mum.cs.uis.model.Status;
@@ -46,9 +47,14 @@ public class OperationsFactory {
 		
 	}
 
+	public static List<Item> getItemsByUserId(int id)
+	{
+		return UsedItemsDaoImpl.getInstance().getAllItemsByUserId(id);
+		
+	}
 	public static List<Item> getAllItems()
 	{
-		return new ArrayList<Item>();
+		return UsedItemsDaoImpl.getInstance().getAllItemsByStatus(Status.APPROVED);
 		
 	}
 	
@@ -66,23 +72,25 @@ public class OperationsFactory {
 	public static boolean approveItem(int id)
 	{
 		
-		return true;
+		 return UsedItemsDaoImpl.getInstance().updateItemStatusById(id, Status.APPROVED) ;
 	}
 	
 	public static boolean diApproveItem(int id)
 	{
-		return true;
+		return UsedItemsDaoImpl.getInstance().updateItemStatusById(id, Status.REJECTED) ;
 	}
 	
 	public static boolean addComment(String comment, int itemId,int userId) throws RuleException
 	{
 		Validate.validateAddComment(comment);
-		
+	
 		return true;
 	}
 	
-	public static void abc()
+	public static List<Comment> getCommentsByItemId(int id)
 	{
-		
+		return new ArrayList<Comment>();
 	}
+	
+	
 }
