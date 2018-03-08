@@ -15,26 +15,25 @@ import edu.mum.cs.uis.ruleset.Validate;
 
 public class OperationsFactory {
 	
-	private static UsedItemsDaoImpl usedItemDao= new UsedItemsDaoImpl();
 	
 	public static User logIn(String userName,String password)  throws RuleException
 	{
 		
 		Validate.validateLoginCredentials(userName, password);
-		return usedItemDao.validateLogin(userName, password);
+		return UsedItemsDaoImpl.getInstance().validateLogin(userName, password);
 	}
 	
 	public static User register(String userName,String password,String firstName, String lastName)throws RuleException
 	{
 		Validate.validateSignUpCredentials(userName, password, firstName, lastName);
-		return usedItemDao.registerNewUser(new User(userName, password, firstName, lastName,false));
+		return UsedItemsDaoImpl.getInstance().registerNewUser(new User(userName, password, firstName, lastName,false));
 		
 	}
 	
 	public static void addCategory(String categoryName)throws RuleException
 	{
 		Validate.validateAddCategory(categoryName);
-		 usedItemDao.addCategory(categoryName);
+		 UsedItemsDaoImpl.getInstance().addCategory(categoryName);
 	}
 	
 	public static boolean addItem(String title,String description,String price, Image img, Category cat,int userId)throws RuleException
@@ -42,7 +41,7 @@ public class OperationsFactory {
 	{
 		Validate.validateItemData(title, description, price, img, cat);
 		Item item= new Item(title,description,Double.parseDouble(price),LocalDate.now(),Status.CREATED,img,cat,userId);
-		return usedItemDao.addItem(item);
+		return UsedItemsDaoImpl.getInstance().addItem(item);
 		
 	}
 

@@ -21,7 +21,9 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 	
 	private DBConnection dbConnection;
 	
-	public UsedItemsDaoImpl() {
+	private static UsedItemsDaoImpl instance;
+	
+	private UsedItemsDaoImpl() {
 		this.dbConnection = DBConnection.getInstance();
 	}
 	
@@ -244,6 +246,8 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
         }
     }    
     
+   
+    
     public static void main(String[] args) {
     	
     	User user = new User( "firstName", "lastName", "userName", "password",false);
@@ -271,6 +275,12 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
     	dao.addItem(item);
     	
     	
+	}
+    
+    public static UsedItemsDaoImpl getInstance() {
+    	if(instance == null)
+    		instance = new UsedItemsDaoImpl();
+		return instance;
 	}
 
 	
