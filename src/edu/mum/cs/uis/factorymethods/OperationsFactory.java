@@ -51,6 +51,11 @@ public class OperationsFactory {
 		
 	}
 	
+	public static List<Category> getAllCategories()
+	{
+		return UsedItemsDaoImpl.getInstance().getCategories();
+		
+	}
 	public static boolean deleteItem(int id)
 	{
 		
