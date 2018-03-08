@@ -10,7 +10,7 @@ public class DBConnection {
 	
 	private Connection connection;
 	
-	private static DBConnection instance = new DBConnection();
+	private static DBConnection instance;
 	
 	private DBConnection() {
 		try {
@@ -28,6 +28,8 @@ public class DBConnection {
 	}
 	
 	public static DBConnection getInstance() {
+		if(instance == null)
+			instance = new DBConnection();
 		return instance;
 	}
 	

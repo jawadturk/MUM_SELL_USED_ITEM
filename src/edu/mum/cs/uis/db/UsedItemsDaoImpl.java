@@ -1,6 +1,7 @@
 package edu.mum.cs.uis.db;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -209,6 +210,62 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 		return false;
 	}
 	
+	public List<Item> getAllItemsByStatus(Status status){
+		
+		Connection conn = dbConnection.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Item> items = new ArrayList<Item>();
+		
+		try {
+			String selectSQL = "SELECT itm.*, img.PATH, cat.NAME AS CATNAME from ITEMS itm,IMAGES img, CATEGORIES cat WHERE itm.IMGID = img.IMGID AND itm.CATID = cat.CATID AND STATUS = ?";
+			pstmt = conn.prepareStatement(selectSQL);
+			pstmt.setString(1, status.toString());
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				int id = rs.getInt("ITEMID");
+				String title = rs.getString("TITLE");
+				String description = rs.getString("DESCRIPTION");
+				Double price = rs.getDouble("PRICE");
+				Date creationDate = rs.getDate("CREATIONDATE");
+				
+				String stts = rs.getString("STATUS");
+				
+				int userId = rs.getInt("USERID");
+				
+				int catId = rs.getInt("CATID");
+				String catName = rs.getString("CATNAME");
+				Category cat = new Category(catId, catName);
+				
+				int imgId = rs.getInt("IMGID");
+				String imgPath = rs.getString("PATH");
+				Image img = new Image(imgId, imgPath);
+				
+				Item item = new Item(title, description, price, creationDate.toLocalDate(), status, img, cat, userId);
+				
+				items.add(item);
+			}
+			closeResultSet(rs);
+		} catch(SQLException sqlEx) {
+			printSQLException(sqlEx);
+		} finally {
+            // release resources
+            try {
+                if (pstmt != null) {
+                	pstmt.close();
+                	pstmt = null;
+                }
+            } catch (SQLException sqle) {
+                printSQLException(sqle);
+            }
+        }
+		return items;
+		
+	}
+	
     public static void printSQLException(SQLException e)
     {
         while (e != null)
@@ -267,12 +324,16 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
     		System.out.println(c);
     	}
     	
-    	Image img = new Image(0, "/x/y/z");
-    	Category category = new Category(1, "VEHICLE");
+//    	Image img = new Image(0, "/x/y/z");
+//    	Category category = new Category(2, "VEHICLE");
+//		Item item = new Item("title1", "description1", 30, LocalDate.now(), Status.APPROVED, img , category, 1);
+//    	dao.addItem(item);
     	
-		Item item = new Item("title", "description", 25.5, LocalDate.now(), Status.CREATED, img , category, 1);
-		
-    	dao.addItem(item);
+    	List<Item> items = dao.getAllItemsByStatus(Status.CREATED);
+    	for(Item item:items) {
+    		System.out.println(item);
+    	}
+    	
     	
     	
 	}

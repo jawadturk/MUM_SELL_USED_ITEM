@@ -111,7 +111,10 @@ public class Item {
 		this.userId = userId;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "id: " + id + ", title: " + title + ", description: " + description + ", img.path: " + img.getPath() + ", cat.name: " + cat.getName();
+	}
 	
 	
 

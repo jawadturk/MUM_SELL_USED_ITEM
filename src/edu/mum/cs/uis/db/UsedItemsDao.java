@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.mum.cs.uis.model.Category;
 import edu.mum.cs.uis.model.Item;
+import edu.mum.cs.uis.model.Status;
 import edu.mum.cs.uis.model.User;
 
 public interface UsedItemsDao {
@@ -15,6 +16,8 @@ public interface UsedItemsDao {
 	public List<Category> getCategories();
 	
 	public boolean addItem(Item item);
+	
+	public List<Item> getAllItemsByStatus(Status status);
 	
 
 }
