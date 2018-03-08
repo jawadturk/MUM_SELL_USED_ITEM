@@ -14,6 +14,7 @@ import edu.mum.cs.uis.ruleset.RuleException;
 import edu.mum.cs.uis.ruleset.Validate;
 
 public class OperationsFactory {
+
 	
 	
 	public static User logIn(String userName,String password)  throws RuleException
@@ -26,7 +27,7 @@ public class OperationsFactory {
 	public static User register(String userName,String password,String firstName, String lastName)throws RuleException
 	{
 		Validate.validateSignUpCredentials(userName, password, firstName, lastName);
-		return UsedItemsDaoImpl.getInstance().registerNewUser(new User(userName, password, firstName, lastName,false));
+		return UsedItemsDaoImpl.getInstance().registerNewUser(new User( firstName, lastName,userName, password,false));
 		
 	}
 	
@@ -59,7 +60,7 @@ public class OperationsFactory {
 	public static boolean deleteItem(int id)
 	{
 		
-		return true;
+		return false;
 	}
 	
 	public static boolean approveItem(int id)
@@ -78,5 +79,10 @@ public class OperationsFactory {
 		Validate.validateAddComment(comment);
 		
 		return true;
+	}
+	
+	public static void abc()
+	{
+		
 	}
 }
