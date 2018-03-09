@@ -33,13 +33,22 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 		Connection conn = dbConnection.getConnection();
 		PreparedStatement pstmt = null;
 		try {
-			pstmt = conn.prepareStatement("insert into USERS (USERNAME, PASSWORD,FIRSTNAME,LASTNAME,ISADMIN) values (?, ?, ?, ?, ?)");
+			pstmt = conn.prepareStatement("insert into USERS (USERNAME, PASSWORD,FIRSTNAME,LASTNAME,ISADMIN) values (?, ?, ?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, user.getUserName());
 			pstmt.setString(2, user.getPassword());
 			pstmt.setString(3, user.getFirstName());
 			pstmt.setString(4, user.getLastName());
 			pstmt.setBoolean(5, false);
-			pstmt.executeUpdate();
+			pstmt.execute();
+			
+			ResultSet rs = pstmt.getGeneratedKeys();
+			int generatedKey = 0;
+			if (rs.next()) {
+			    generatedKey = rs.getInt(1);
+			}
+			System.out.println("Inserted record's ID: " + generatedKey);
+			user.setId(generatedKey);
+			
 			return user;
 			
 		} catch(SQLException sqlEx) {
@@ -541,12 +550,12 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
     	
 //    	dao.registerNewUser(user);
     	
-    	System.out.println(dao.validateLogin("userName", "password"));
+//    	System.out.println(dao.validateLogin("userName", "password"));
 //    	System.out.println(dao.validateLogin("userName1", "password"));
+    	
 //    	dao.addCategory("VEHICLE");
 //    	dao.addCategory("ELECTRONICS");
 //    	dao.addCategory("LAPTOP1");
-    	
 //    	List<Category> cats = new ArrayList<>();
 //    	cats = dao.getCategories();
 //    	for(Category c:cats) {
@@ -558,7 +567,7 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 //		Item item = new Item("title1", "description1", 30, LocalDate.now(), Status.APPROVED, img , category, 1);
 //    	dao.addItem(item);
     	
-//    	List<Item> items = dao.getAllItemsByStatus(Status.CREATED);
+//    	List<Item> items = dao.getAllItemsByStatus(Status.APPROVED);
 //    	for(Item item:items) {
 //    		System.out.println(item);
 //    	}
@@ -580,10 +589,10 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
     	
 //    	System.out.println(dao.addComment("comment1", 1, 1));
     	
-    	List<Item> items = dao.getAllItems();
-    	for(Item item:items) {
-    		System.out.println(item);
-    	}
+//    	List<Item> items = dao.getAllItems();
+//    	for(Item item:items) {
+//    		System.out.println(item);
+//    	}
 	}
     
     public static UsedItemsDaoImpl getInstance() {
