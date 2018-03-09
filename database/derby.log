@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Thu Mar 08 20:54:07 CST 2018:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.2 - (1629631): instance a816c00e-0162-08ae-0d68-00000e7f1198 
+Thu Mar 08 21:43:57 CST 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.2 - (1629631): instance a816c00e-0162-08db-aeec-00000e7ed040 
 on database directory D:\MyWork\workspace-oxygen\git\MUM_SELL_USED_ITEM\database\UsedItemsDB with class loader sun.misc.Launcher$AppClassLoader@66d3c617 
 Loaded from file:/C:/Program%20Files/Java/jdk1.8.0_151/db/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -12,8 +12,8 @@ os.version=10.0
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Thu Mar 08 21:03:18 CST 2018: Shutting down Derby engine
+Thu Mar 08 21:44:38 CST 2018: Shutting down Derby engine
 ----------------------------------------------------------------
-Thu Mar 08 21:03:18 CST 2018:
-Shutting down instance a816c00e-0162-08ae-0d68-00000e7f1198 on database directory D:\MyWork\workspace-oxygen\git\MUM_SELL_USED_ITEM\database\UsedItemsDB with class loader sun.misc.Launcher$AppClassLoader@66d3c617 
+Thu Mar 08 21:44:38 CST 2018:
+Shutting down instance a816c00e-0162-08db-aeec-00000e7ed040 on database directory D:\MyWork\workspace-oxygen\git\MUM_SELL_USED_ITEM\database\UsedItemsDB with class loader sun.misc.Launcher$AppClassLoader@66d3c617 
 ----------------------------------------------------------------

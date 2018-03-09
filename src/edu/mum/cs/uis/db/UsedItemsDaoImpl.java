@@ -361,6 +361,8 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 				
 				item = new Item(title, description, price, creationDate.toLocalDate(), status, img, cat, userId);
 			}
+			
+			
 			closeResultSet(rs);
 		} catch(SQLException sqlEx) {
 			printSQLException(sqlEx);
