@@ -408,8 +408,89 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 
 	@Override
 	public boolean addComment(String comment, int itemId, int userId) {
-		// TODO Auto-generated method stub
+		
+		Connection conn = dbConnection.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement("insert into COMMENTS (USERID, ITEMID,CMNTEXT,CREATIONDATE) values (?, ?, ?, ?)");
+			pstmt.setInt(1, userId);
+			pstmt.setInt(2, itemId);
+			pstmt.setString(3, comment);
+			pstmt.setDate(4, java.sql.Date.valueOf(LocalDate.now()));
+			pstmt.executeUpdate();
+			return true;
+			
+		} catch(SQLException sqlEx) {
+			printSQLException(sqlEx);
+		} finally {
+            // release resources
+            try {
+                if (pstmt != null) {
+                	pstmt.close();
+                	pstmt = null;
+                }
+            } catch (SQLException sqle) {
+                printSQLException(sqle);
+            }
+        }
 		return false;
+	}
+	
+	
+	@Override
+	public List<Item> getAllItems() {
+		
+		Connection conn = dbConnection.getConnection();
+		Statement stmt = null;
+		ResultSet rs = null;
+		List<Item> items = new ArrayList<Item>();
+		
+		try {
+			stmt = conn.createStatement();
+			
+			String sqlQuery = "SELECT itm.*, img.PATH, cat.NAME AS CATNAME from ITEMS itm,IMAGES img, CATEGORIES cat WHERE itm.IMGID = img.IMGID AND itm.CATID = cat.CATID";
+			rs = stmt.executeQuery(sqlQuery);
+			while(rs.next()) {
+				
+				int id = rs.getInt("ITEMID");
+				String title = rs.getString("TITLE");
+				String description = rs.getString("DESCRIPTION");
+				Double price = rs.getDouble("PRICE");
+				Date creationDate = rs.getDate("CREATIONDATE");
+				
+				String stts = rs.getString("STATUS");
+				Status status = Status.valueOf(stts);
+				
+				int userId = rs.getInt("USERID");
+				
+				int catId = rs.getInt("CATID");
+				String catName = rs.getString("CATNAME");
+				Category cat = new Category(catId, catName);
+				
+				int imgId = rs.getInt("IMGID");
+				String imgPath = rs.getString("PATH");
+				Image img = new Image(imgId, imgPath);
+				
+				Item item = new Item(title, description, price, creationDate.toLocalDate(), status, img, cat, userId);
+				
+				
+				items.add(item);
+			}
+			closeResultSet(rs);
+		} catch(SQLException sqlEx) {
+			printSQLException(sqlEx);
+		} finally {
+            // release resources
+            try {
+                if (stmt != null) {
+                	stmt.close();
+                	stmt = null;
+                }
+            } catch (SQLException sqle) {
+                printSQLException(sqle);
+            }
+        }
+		return items;
 	}
 	
     public static void printSQLException(SQLException e)
@@ -494,6 +575,13 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 //    	for(Item item:items) {
 //    		System.out.println(item);
 //    	}
+    	
+//    	System.out.println(dao.addComment("comment1", 1, 1));
+    	
+    	List<Item> items = dao.getAllItems();
+    	for(Item item:items) {
+    		System.out.println(item);
+    	}
 	}
     
     public static UsedItemsDaoImpl getInstance() {
@@ -501,6 +589,8 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
     		instance = new UsedItemsDaoImpl();
 		return instance;
 	}
+
+	
 
 	
 
