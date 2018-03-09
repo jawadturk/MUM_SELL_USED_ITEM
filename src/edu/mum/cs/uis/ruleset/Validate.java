@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import edu.mum.cs.uis.model.Category;
 import edu.mum.cs.uis.model.Image;
 import edu.mum.cs.uis.model.Status;
-import edu.mum.cs.uis.utils.Utils;;
+import edu.mum.cs.uis.utils.Utils;
 public class Validate {
 	
 	public static void validateLoginCredentials(String userName,String password) throws RuleException
@@ -83,7 +83,15 @@ public class Validate {
     private static void checkIfPriceIsFloatWithTwoPlaces(String text) throws RuleException
     {
         
-        if(Utils.doubleChecker(text))
+    	    boolean checkValid = text.matches("^\\d+\\.\\d{2}$");
+    	    
+    	    if(!checkValid) {
+    	    	throw new RuleException("Price must be a floating point number with two decimal places");
+    	    
+    	  }
+    	    
+    	
+        /*if(Utils.doubleChecker(text))
         {
             if(Double.parseDouble(text)%1!=0)
             {
@@ -101,6 +109,6 @@ public class Validate {
             }  
         }else{
             throw new RuleException("Price is not floating point number");
-       }
+       }*/
     }
 }
