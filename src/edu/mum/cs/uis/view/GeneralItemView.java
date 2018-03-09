@@ -1,8 +1,11 @@
 package edu.mum.cs.uis.view;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.mum.cs.uis.model.Item;
 import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -24,7 +27,9 @@ import javafx.stage.Stage;
 public class GeneralItemView extends Stage{
 
 	Stage previousStage;
-
+	Item selectedItem;
+	private final Image IMAGE_DEFAULT = new Image(getClass().getResource("default_item_image.png").toExternalForm());
+	
     public Stage getPreviousStage() {
 		return previousStage;
 	}
@@ -33,8 +38,9 @@ public class GeneralItemView extends Stage{
 		this.previousStage = previousStage;
 	}
 	
-	public GeneralItemView(Stage ps) {
+	public GeneralItemView(Stage ps, Item aSelectedItem) {
 		
+		selectedItem = aSelectedItem;
 		previousStage = ps;
     	GridPane grid = new GridPane();
     	VBox vb = new VBox();
@@ -62,7 +68,7 @@ public class GeneralItemView extends Stage{
 
         TextField itemNameInput = new TextField();
         itemNameInput.setDisable(true);
-        itemNameInput.setText("Test Item Name");        
+        itemNameInput.setText(selectedItem.getTitle());        
 //        itemNameInput.setStyle("-fx-text-inner-color: blue;-fx-font-weight: bold;");
         
         HBox hbBtn = new HBox();
@@ -80,7 +86,7 @@ public class GeneralItemView extends Stage{
         itemDescInput.setPrefWidth(350);
         
         itemDescInput.setDisable(true);
-        itemDescInput.setText("Test Item Description");        
+        itemDescInput.setText(selectedItem.getDescription());        
 //        itemDescInput.setStyle("-fx-text-inner-color: blue;-fx-font-weight: bold;");
         
         GridPane.setHalignment(itemDescInput, HPos.CENTER);
@@ -91,7 +97,7 @@ public class GeneralItemView extends Stage{
 
         TextField itemPriceInput = new TextField();
         itemPriceInput.setDisable(true);
-        itemPriceInput.setText("100.55");        
+        itemPriceInput.setText(selectedItem.getPrice()+"");        
 //        itemPriceInput.setStyle("-fx-text-inner-color: blue;-fx-font-weight: bold;");
         
         HBox hboxPrice = new HBox();
@@ -103,29 +109,33 @@ public class GeneralItemView extends Stage{
         grid.add(itemCategory, 0, 6);
         
         List<String> categories = new ArrayList<>();
-        categories.add("Self Care");
-        categories.add("Electronics");
+        categories.add(selectedItem.getCat().getName());
+        /*categories.add("Electronics");
         categories.add("Vehicles");
-        categories.add("House Hold");
+        categories.add("House Hold");*/
         ComboBox<String> categoriesCombo = 
     			new ComboBox<>(FXCollections.observableList(categories));
   		GridPane.setHalignment(categoriesCombo, HPos.LEFT);
   		
-  		categoriesCombo.setValue("Self Care");
+  		categoriesCombo.setValue(selectedItem.getCat().getName());
   		categoriesCombo.setDisable(true);
 //  		categoriesCombo.setStyle("-fx-text-inner-color: blue;-fx-font-weight: bold;");
         
   		grid.add(categoriesCombo, 0, 7);
 //        
-  		
-  		Image testImage =
-                new Image(getClass().getResourceAsStream(
-                    "flower.jpg")
-                );
+
+  		Image imageTmp = null;
+  		try {
+    		String imagePath = selectedItem.getImg().getPath();
+			imageTmp = new Image(new FileInputStream(imagePath));
+		} catch (FileNotFoundException e) {
+			imageTmp = IMAGE_DEFAULT;
+		}
+    	
   		
   		ImageView myImageView = new ImageView();  
   		
-        myImageView.setImage(testImage);
+        myImageView.setImage(imageTmp);
         
         myImageView.setFitWidth(900);
         myImageView.setPreserveRatio(true);

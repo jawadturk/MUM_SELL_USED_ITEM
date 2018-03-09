@@ -2,7 +2,9 @@ package edu.mum.cs.uis.view;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.List;
 
+import edu.mum.cs.uis.factorymethods.OperationsFactory;
 import edu.mum.cs.uis.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,17 +25,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import edu.mum.cs.uis.model.Item;
 
 public class UserHomeView extends Stage{
 
 	Stage previousStage;
 	
-    private final Image IMAGE_RUBY  = new Image(getClass().getResource("Ruby_logo_64x64.png").toExternalForm());
+    /*private final Image IMAGE_RUBY  = new Image(getClass().getResource("Ruby_logo_64x64.png").toExternalForm());
     private final Image IMAGE_APPLE  = new Image(getClass().getResource("apple.png").toExternalForm());
     private final Image IMAGE_VISTA  = new Image(getClass().getResource("windows_64x64.png").toExternalForm());
-    private final Image IMAGE_TWITTER = new Image(getClass().getResource("twitter-bird.png").toExternalForm());
+    private final Image IMAGE_TWITTER = new Image(getClass().getResource("twitter-bird.png").toExternalForm());*/
 
-    private Image[] listOfImages = {IMAGE_RUBY, IMAGE_APPLE, IMAGE_VISTA, IMAGE_TWITTER};
+	private final Image IMAGE_DEFAULT = new Image(getClass().getResource("default_item_image.png").toExternalForm());
+	
+    /*private Image[] listOfImages = {IMAGE_RUBY, IMAGE_APPLE, IMAGE_VISTA, IMAGE_TWITTER};*/
 
     public Stage getPreviousStage() {
 		return previousStage;
@@ -62,34 +67,63 @@ public class UserHomeView extends Stage{
             VBox vvbox = new VBox();
 //            hbox.getChildren().add(new Label("Tab" + i));
             
-        	
-            ListView<String> listView = new ListView<String>();
-            ObservableList<String> items =FXCollections.observableArrayList (
-                    "RUBY", "APPLE", "VISTA", "TWITTER");
+            int userId = 0;
+            
+            try {
+				userId = LoggedinSession.getInstance().getLoggedinUser().getId();
+				System.out.println("Loggedin User ID: " + userId);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            
+            List<Item> allApprovedItems = OperationsFactory.getItemsByUserId(userId);
+            
+            ListView<Item> listView = new ListView<Item>();
+            
+            ObservableList<Item> items = FXCollections.observableArrayList(allApprovedItems);
+            
             listView.setItems(items);
-            listView.setCellFactory(param -> new ListCell<String>() {
+            listView.setCellFactory(param -> new ListCell<Item>() {
                 private ImageView imageView = new ImageView();
                 @Override
-                public void updateItem(String name, boolean empty) {
-                    super.updateItem(name, empty);
+                public void updateItem(Item itemVal, boolean empty) {
+                    super.updateItem(itemVal, empty);
                     if (empty) {
                         setText(null);
                         setGraphic(null);
                     } else {
-                        if(name.equals("RUBY"))
+                        /*if(name.equals("RUBY"))
                             imageView.setImage(listOfImages[0]);
                         else if(name.equals("APPLE"))
                             imageView.setImage(listOfImages[1]);
                         else if(name.equals("VISTA"))
                             imageView.setImage(listOfImages[2]);
                         else if(name.equals("TWITTER"))
-                            imageView.setImage(listOfImages[3]);
-                        setText(name);
+                            imageView.setImage(listOfImages[3]);*/
+                    	
+                    	Image imageTmp = null; 
+                    	
+                    	try {
+                    		String imagePath = itemVal.getImg().getPath();
+							imageTmp = new Image(new FileInputStream(imagePath));
+						} catch (FileNotFoundException e) {
+							imageTmp = IMAGE_DEFAULT;
+						}
+                    	imageView.setImage(imageTmp);
+                    	imageView.setFitWidth(64);
+                    	imageView.setPreserveRatio(true);
+                    	imageView.setSmooth(true);
+                    	imageView.setCache(true);
+                    	
+                    	setText(itemVal.getTitle());
                         setGraphic(imageView);
-                        
                     }
                 }
             });
+            
+            
+            
             
             listView.setOnMousePressed(new ListViewEventHandler(listView));
             listView.prefHeightProperty().bind(scene.heightProperty());
