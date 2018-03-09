@@ -258,6 +258,7 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 				Image img = new Image(imgId, imgPath);
 				
 				Item item = new Item(title, description, price, creationDate.toLocalDate(), status, img, cat, userId);
+				item.setId(id);
 				
 				items.add(item);
 			}
@@ -314,6 +315,7 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 				Image img = new Image(imgId, imgPath);
 				
 				Item item = new Item(title, description, price, creationDate.toLocalDate(), status, img, cat, userId);
+				item.setId(id);
 				
 				items.add(item);
 			}
@@ -371,6 +373,7 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 				Image img = new Image(imgId, imgPath);
 				
 				item = new Item(title, description, price, creationDate.toLocalDate(), status, img, cat, userId);
+				item.setId(id);
 				
 				
 				selectSQL = "SELECT * from COMMENTS C WHERE ITEMID = ?";
@@ -506,7 +509,7 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 				Image img = new Image(imgId, imgPath);
 				
 				Item item = new Item(title, description, price, creationDate.toLocalDate(), status, img, cat, userId);
-				
+				item.setId(id);
 				
 				items.add(item);
 			}
