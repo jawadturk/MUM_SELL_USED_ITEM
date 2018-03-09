@@ -57,6 +57,17 @@ public class OperationsFactory {
 		return UsedItemsDaoImpl.getInstance().getAllItemsByStatus(Status.APPROVED);
 		
 	}
+	public static List<Item> getAllApprovedItems()
+	{
+		return UsedItemsDaoImpl.getInstance().getAllItemsByStatus(Status.APPROVED);
+		
+	}
+	
+	public static List<Item> getAllAdminItems()
+	{
+		return UsedItemsDaoImpl.getInstance().getAllItemsByStatus(Status.CREATED);
+		
+	}
 	
 	public static List<Category> getAllCategories()
 	{
