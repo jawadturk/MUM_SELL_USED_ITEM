@@ -73,14 +73,16 @@ public class LoginViewController {
 				
 				if(loggedinUser == null) {
 					throw new RuleException("Invalid User Login!");
-				}else if(loggedinUser.isAdmin()){
-					
 				}else {
-					new UserHomeView(stage);
-				}
-				
-				LoggedinSession.setLoggedinUser(loggedinUser);
-				
+					LoggedinSession.getInstance().setLoggedinUser(loggedinUser);
+					
+					if(loggedinUser.isAdmin()){
+						
+					}else {
+						new UserHomeView(stage);
+					}
+					
+				}				
 			} catch (RuleException e) {
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("User Login Error");

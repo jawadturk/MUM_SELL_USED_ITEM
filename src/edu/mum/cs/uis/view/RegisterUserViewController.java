@@ -83,15 +83,25 @@ public class RegisterUserViewController {
 						passwordField.getText(), firstNameField.getText(), 
 						lastNameField.getText());
 				
+				
+				
 				if(loggedinUser == null) {
 					throw new RuleException("Invalid User Register!");
-				}else if(loggedinUser.isAdmin()){
-					
 				}else {
-					new UserHomeView(stage);
+					LoggedinSession.getInstance().setLoggedinUser(loggedinUser);
+					
+					if(loggedinUser.isAdmin()){
+						
+					}else {
+						new UserHomeView(stage);
+					}
+					
 				}
+					
+					
+
 				
-				LoggedinSession.setLoggedinUser(loggedinUser);
+				
 				
 			} catch (RuleException e) {
 				Alert alert = new Alert(AlertType.ERROR);

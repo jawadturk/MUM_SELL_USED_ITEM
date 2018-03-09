@@ -3,6 +3,7 @@ package edu.mum.cs.uis.view;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import edu.mum.cs.uis.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -134,11 +135,17 @@ public class UserHomeView extends Stage{
         
         String welcomeStr = "Welcome";
         try {
-        	welcomeStr = "Welcome " 
-            		+ LoggedinSession.getLoggedinUser().getLastName() 
-            		+ ", " + LoggedinSession.getLoggedinUser().getFirstName();
+        	User user = LoggedinSession.getInstance().getLoggedinUser();
+        	if(user == null) {
+        		System.out.println("Logged in User is Null !!!!!");
+        	}else {
+            	welcomeStr = "Welcome " 
+                		+ user.getLastName() 
+                		+ ", " + user.getFirstName();
+        	}
+
         }catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
         
         Label welcomeLbl = new Label(welcomeStr);

@@ -1,18 +1,32 @@
 package edu.mum.cs.uis.view;
 
+import edu.mum.cs.uis.db.DBConnection;
 import edu.mum.cs.uis.model.User;
 
 public class LoggedinSession {
 
-	private static User loggedinUser;
+	private User loggedinUser;
 	
-	public static void setLoggedinUser(User user) {
+	private static LoggedinSession instance;
+	
+	private LoggedinSession() {
+		
+	}
+	
+	public static LoggedinSession getInstance() {
+		if(instance == null) {
+			instance = new LoggedinSession();
+		}
+		return instance;	
+	}
+	
+	public void setLoggedinUser(User user) {
 		if(loggedinUser == null) {
 			loggedinUser = user;					
 		}
 	}
 	
-	public static User getLoggedinUser() {
+	public User getLoggedinUser() {
 		return loggedinUser;
 	}
 	

@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import edu.mum.cs.uis.factorymethods.OperationsFactory;
+import edu.mum.cs.uis.model.Category;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -38,11 +40,17 @@ public class CreateItemView extends Stage{
 	// Show Created User ?
 	// Show Item Status ?
 	
+	Stage previousStage;
+	
+	List<Category> allCategories;
+	ComboBox<String> categoriesCombo;
+	TextField itemNameInput;
+	TextArea itemDescInput;
+	TextField itemPriceInput;
+	
 	ImageView myImageView;
 	Label imagePathVal;
-
-	Stage previousStage;
-
+	
     public Stage getPreviousStage() {
 		return previousStage;
 	}
@@ -87,7 +95,7 @@ public class CreateItemView extends Stage{
         Label itemName = new Label("Name:");
         grid.add(itemName, 0, 0);
 
-        TextField itemNameInput = new TextField();
+        itemNameInput = new TextField();
         HBox hbBtn = new HBox();
         hbBtn.setAlignment(Pos.CENTER_LEFT);
         hbBtn.getChildren().add(itemNameInput);
@@ -96,7 +104,7 @@ public class CreateItemView extends Stage{
         Label itemDesc = new Label("Description:");
         grid.add(itemDesc, 0, 2);
 
-        TextArea itemDescInput = new TextArea();
+        itemDescInput = new TextArea();
         itemDescInput.setPrefRowCount(5);
         itemDescInput.setPrefColumnCount(100);
         itemDescInput.setWrapText(true);
@@ -107,7 +115,7 @@ public class CreateItemView extends Stage{
         Label itemPrice = new Label("Price:");
         grid.add(itemPrice, 0, 4);
 
-        TextField itemPriceInput = new TextField();
+        itemPriceInput = new TextField();
         HBox hboxPrice = new HBox();
         hboxPrice.setAlignment(Pos.CENTER_LEFT);
         hboxPrice.getChildren().add(itemPriceInput);
@@ -116,13 +124,22 @@ public class CreateItemView extends Stage{
         Label itemCategory = new Label("Category:");
         grid.add(itemCategory, 0, 6);
         
+        allCategories =  OperationsFactory.getAllCategories();
+        
         List<String> categories = new ArrayList<>();
-        categories.add("Self Care");
+        
+        /*categories.add("Self Care");
         categories.add("Electronics");
         categories.add("Vehicles");
-        categories.add("House Hold");
-        ComboBox<String> categoriesCombo = 
+        categories.add("House Hold");*/
+        
+        for(Category cat: allCategories) {
+        	categories.add(cat.getName());
+        }
+        
+        categoriesCombo = 
     			new ComboBox<>(FXCollections.observableList(categories));
+        
   		GridPane.setHalignment(categoriesCombo, HPos.LEFT);
   		grid.add(categoriesCombo, 0, 7);
 
@@ -147,9 +164,24 @@ public class CreateItemView extends Stage{
         vb.getChildren().add(grid);
         vb.getChildren().add(myImageView);
         
+        Button addBtn = new Button("Add");
+        addBtn.setOnAction(new CreateItemController(this,"ADD"));
         
+        Button cancelBtn = new Button("Cancel");
+        cancelBtn.setOnAction(new CreateItemController(this,"CANCEL"));
+        
+        HBox buttonsBarBox = new HBox(10);
+        buttonsBarBox.setAlignment(Pos.CENTER_RIGHT);
+        buttonsBarBox.setPadding(new Insets(5,5,5,5));
+        
+        buttonsBarBox.getChildren().add(addBtn);
+        buttonsBarBox.getChildren().add(cancelBtn);
         
         box.getChildren().add(vb);
+        box.setFillWidth(true);        
+        box.prefHeightProperty().bind(scene.heightProperty());
+        box.prefWidthProperty().bind(scene.widthProperty());
+        box.getChildren().add(buttonsBarBox);
         
         
         show();
@@ -189,5 +221,79 @@ public class CreateItemView extends Stage{
 
         }
     };
+    
+    public String getItemName() {
+    	
+    	String itemName = null;
+    	if(itemNameInput != null) {
+    		itemName = itemNameInput.getText();
+    	}
+    	return itemName;
+    	
+    }
+    
+    public String getItemDesc() {
+    	
+    	String itemDesc = null;
+    	if(itemDescInput != null) {
+    		itemDesc = itemDescInput.getText();
+    	}
+    	return itemDesc;
+    	
+    }
+
+    public String getItemPrice() {
+    	
+    	String itemPrice = null;
+    	if(itemPriceInput != null) {
+    		itemPrice = itemPriceInput.getText();
+    	}
+    	return itemPrice;
+    	
+    }
+    
+    public Category getSelectedCategory() {
+    	
+    	if(categoriesCombo != null && allCategories != null && allCategories.size() > 0) {
+    		String value = categoriesCombo.getValue();
+    		
+    		for(Category cat: allCategories) {
+    			if(cat != null && value != null && value.equals(cat.getName())) {
+    				return cat;
+    			}
+    		}
+    		
+    	}
+    	
+    	
+    	return null;
+    }
+    
+    public edu.mum.cs.uis.model.Image getUploadedImage(){
+    	
+    	if(imagePathVal != null) {
+    		String imagePath = imagePathVal.getText();
+    		if(imagePath != null && !"".equals(imagePath) && imagePath != "") {
+    			return new edu.mum.cs.uis.model.Image(0, imagePath);
+    		}
+    	}
+    	
+    	
+    	return null;
+    }
+    
+    public int getUserId() {
+    	
+    	int id = 0;
+		try {
+			id = LoggedinSession.getInstance().getLoggedinUser().getId();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return id;
+    	
+    }
     
 }
