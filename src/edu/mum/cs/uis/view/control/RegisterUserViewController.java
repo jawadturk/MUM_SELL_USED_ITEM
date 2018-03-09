@@ -124,7 +124,7 @@ public class RegisterUserViewController {
 		if (event.getSource() == returnLoginBtn) {
 			stage = (Stage) returnLoginBtn.getScene().getWindow();
 			try {
-				root = FXMLLoader.load(getClass().getResource("../login_view.fxml"));
+				root = FXMLLoader.load(getClass().getResource("/edu/mum/cs/uis/view/login_view.fxml"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

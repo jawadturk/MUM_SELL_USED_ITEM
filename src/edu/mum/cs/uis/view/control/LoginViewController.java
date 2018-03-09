@@ -115,8 +115,8 @@ public class LoginViewController {
 
 		if (event.getSource() == signUpBtn){
 			stage = (Stage) signUpBtn.getScene().getWindow();
-			try {
-				root = FXMLLoader.load(getClass().getResource("../register_user_view.fxml"));
+			try { // "package1/resources/repository/SSL-Key/cert.jks"
+				root = FXMLLoader.load(getClass().getResource("/edu/mum/cs/uis/view/register_user_view.fxml"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
