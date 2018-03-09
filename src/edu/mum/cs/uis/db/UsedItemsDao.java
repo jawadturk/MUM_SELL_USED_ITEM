@@ -20,6 +20,7 @@ public interface UsedItemsDao {
 	public List<Item> getAllItemsByUserId(int userId);
 	public Item getItemDetailsById(int itemId);
 	public boolean updateItemStatusById(int itemId, Status status);
+	public List<Item> getAllItems();
 	
 	
 	public boolean addComment(String comment, int itemId, int userId);

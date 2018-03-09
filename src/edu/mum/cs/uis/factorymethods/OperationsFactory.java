@@ -54,7 +54,7 @@ public class OperationsFactory {
 	}
 	public static List<Item> getAllItems()
 	{
-		return UsedItemsDaoImpl.getInstance().getAllItemsByStatus(Status.APPROVED);
+		return UsedItemsDaoImpl.getInstance().getAllItems();
 		
 	}
 	public static List<Item> getAllApprovedItems()
@@ -95,13 +95,13 @@ public class OperationsFactory {
 	{
 		Validate.validateAddComment(comment);
 	
-		return true;
+		return UsedItemsDaoImpl.getInstance().addComment(comment, itemId, userId);
 	}
 	
-	public static List<Comment> getCommentsByItemId(int id)
-	{
+	public static List<Comment> getCommentsByItemId(int id){
 		return new ArrayList<Comment>();
 	}
+	
 	
 	
 }

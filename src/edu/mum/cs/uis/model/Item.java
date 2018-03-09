@@ -1,6 +1,7 @@
 package edu.mum.cs.uis.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Item {
 	
@@ -13,6 +14,8 @@ public class Item {
 	private Image img;
 	private Category cat;
 	private int userId;
+	
+	private List<Comment> comments;
 	
 	public Item(int id, String title, String description, double price, LocalDate creationDate, Status status,Image img,Category cat, int userId) {
 		super();
@@ -111,6 +114,12 @@ public class Item {
 		this.userId = userId;
 	}
 	
+	
+	
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
 	@Override
 	public String toString() {
 		return "id: " + id + ", title: " + title + ", description: " + description + ", img.path: " + 

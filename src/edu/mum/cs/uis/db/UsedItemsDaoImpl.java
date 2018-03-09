@@ -12,6 +12,7 @@ import java.util.List;
 
 import edu.mum.cs.uis.model.Admin;
 import edu.mum.cs.uis.model.Category;
+import edu.mum.cs.uis.model.Comment;
 import edu.mum.cs.uis.model.Image;
 import edu.mum.cs.uis.model.Item;
 import edu.mum.cs.uis.model.Status;
@@ -33,13 +34,22 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 		Connection conn = dbConnection.getConnection();
 		PreparedStatement pstmt = null;
 		try {
-			pstmt = conn.prepareStatement("insert into USERS (USERNAME, PASSWORD,FIRSTNAME,LASTNAME,ISADMIN) values (?, ?, ?, ?, ?)");
+			pstmt = conn.prepareStatement("insert into USERS (USERNAME, PASSWORD,FIRSTNAME,LASTNAME,ISADMIN) values (?, ?, ?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, user.getUserName());
 			pstmt.setString(2, user.getPassword());
 			pstmt.setString(3, user.getFirstName());
 			pstmt.setString(4, user.getLastName());
 			pstmt.setBoolean(5, false);
-			pstmt.executeUpdate();
+			pstmt.execute();
+			
+			ResultSet rs = pstmt.getGeneratedKeys();
+			int generatedKey = 0;
+			if (rs.next()) {
+			    generatedKey = rs.getInt(1);
+			}
+			System.out.println("Inserted record's ID: " + generatedKey);
+			user.setId(generatedKey);
+			
 			return user;
 			
 		} catch(SQLException sqlEx) {
@@ -328,11 +338,12 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 		
 		Connection conn = dbConnection.getConnection();
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		ResultSet rs,rs2 = null;
 		Item item = null;
+		String selectSQL = null;
 		
 		try {
-			String selectSQL = "SELECT itm.*, img.PATH, cat.NAME AS CATNAME from ITEMS itm,IMAGES img, CATEGORIES cat WHERE itm.IMGID = img.IMGID AND itm.CATID = cat.CATID AND itm.ITEMID = ?";
+			selectSQL = "SELECT itm.*, img.PATH, cat.NAME AS CATNAME from ITEMS itm,IMAGES img, CATEGORIES cat WHERE itm.IMGID = img.IMGID AND itm.CATID = cat.CATID AND itm.ITEMID = ?";
 			pstmt = conn.prepareStatement(selectSQL);
 			pstmt.setInt(1, itemId);
 			
@@ -360,7 +371,30 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 				Image img = new Image(imgId, imgPath);
 				
 				item = new Item(title, description, price, creationDate.toLocalDate(), status, img, cat, userId);
+				
+				
+				selectSQL = "SELECT * from COMMENTS C WHERE ITEMID = ?";
+				pstmt = conn.prepareStatement(selectSQL);
+				pstmt.setInt(1, itemId);
+				
+				rs = pstmt.executeQuery();
+				
+				List<Comment> comments = new ArrayList<Comment>();
+				while(rs.next()) {
+					
+					int cmntId = rs.getInt("CMNTID");
+					int cmntUserId = rs.getInt("USERID");
+//					int id = rs.getInt("ITEMID");
+					String cmntContent = rs.getString("CMNTEXT");
+					Date cmntCreationDate = rs.getDate("CREATIONDATE");
+					Comment cmnt = new Comment(id,cmntContent, itemId,null,cmntCreationDate.toLocalDate());
+					comments.add(cmnt);
+				}
+				item.setComments(comments);
+				
 			}
+			
+			
 			closeResultSet(rs);
 		} catch(SQLException sqlEx) {
 			printSQLException(sqlEx);
@@ -408,8 +442,89 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 
 	@Override
 	public boolean addComment(String comment, int itemId, int userId) {
-		// TODO Auto-generated method stub
+		
+		Connection conn = dbConnection.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement("insert into COMMENTS (USERID, ITEMID,CMNTEXT,CREATIONDATE) values (?, ?, ?, ?)");
+			pstmt.setInt(1, userId);
+			pstmt.setInt(2, itemId);
+			pstmt.setString(3, comment);
+			pstmt.setDate(4, java.sql.Date.valueOf(LocalDate.now()));
+			pstmt.executeUpdate();
+			return true;
+			
+		} catch(SQLException sqlEx) {
+			printSQLException(sqlEx);
+		} finally {
+            // release resources
+            try {
+                if (pstmt != null) {
+                	pstmt.close();
+                	pstmt = null;
+                }
+            } catch (SQLException sqle) {
+                printSQLException(sqle);
+            }
+        }
 		return false;
+	}
+	
+	
+	@Override
+	public List<Item> getAllItems() {
+		
+		Connection conn = dbConnection.getConnection();
+		Statement stmt = null;
+		ResultSet rs = null;
+		List<Item> items = new ArrayList<Item>();
+		
+		try {
+			stmt = conn.createStatement();
+			
+			String sqlQuery = "SELECT itm.*, img.PATH, cat.NAME AS CATNAME from ITEMS itm,IMAGES img, CATEGORIES cat WHERE itm.IMGID = img.IMGID AND itm.CATID = cat.CATID";
+			rs = stmt.executeQuery(sqlQuery);
+			while(rs.next()) {
+				
+				int id = rs.getInt("ITEMID");
+				String title = rs.getString("TITLE");
+				String description = rs.getString("DESCRIPTION");
+				Double price = rs.getDouble("PRICE");
+				Date creationDate = rs.getDate("CREATIONDATE");
+				
+				String stts = rs.getString("STATUS");
+				Status status = Status.valueOf(stts);
+				
+				int userId = rs.getInt("USERID");
+				
+				int catId = rs.getInt("CATID");
+				String catName = rs.getString("CATNAME");
+				Category cat = new Category(catId, catName);
+				
+				int imgId = rs.getInt("IMGID");
+				String imgPath = rs.getString("PATH");
+				Image img = new Image(imgId, imgPath);
+				
+				Item item = new Item(title, description, price, creationDate.toLocalDate(), status, img, cat, userId);
+				
+				
+				items.add(item);
+			}
+			closeResultSet(rs);
+		} catch(SQLException sqlEx) {
+			printSQLException(sqlEx);
+		} finally {
+            // release resources
+            try {
+                if (stmt != null) {
+                	stmt.close();
+                	stmt = null;
+                }
+            } catch (SQLException sqle) {
+                printSQLException(sqle);
+            }
+        }
+		return items;
 	}
 	
     public static void printSQLException(SQLException e)
@@ -458,12 +573,12 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
     	
 //    	dao.registerNewUser(user);
     	
-    	System.out.println(dao.validateLogin("userName", "password"));
+//    	System.out.println(dao.validateLogin("userName", "password"));
 //    	System.out.println(dao.validateLogin("userName1", "password"));
+    	
 //    	dao.addCategory("VEHICLE");
 //    	dao.addCategory("ELECTRONICS");
 //    	dao.addCategory("LAPTOP1");
-    	
 //    	List<Category> cats = new ArrayList<>();
 //    	cats = dao.getCategories();
 //    	for(Category c:cats) {
@@ -475,7 +590,7 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 //		Item item = new Item("title1", "description1", 30, LocalDate.now(), Status.APPROVED, img , category, 1);
 //    	dao.addItem(item);
     	
-//    	List<Item> items = dao.getAllItemsByStatus(Status.CREATED);
+//    	List<Item> items = dao.getAllItemsByStatus(Status.APPROVED);
 //    	for(Item item:items) {
 //    		System.out.println(item);
 //    	}
@@ -485,12 +600,19 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 //    		System.out.println(item);
 //    	}
     	
-//    	System.out.println(dao.getItemDetailsById(101));
+    	System.out.println(dao.getItemDetailsById(1));
     	
     	
 //    	System.out.println(dao.updateItemStatusById(101,Status.REJECTED));
 //    	
 //    	List<Item> items = dao.getAllItemsByUserId(1);
+//    	for(Item item:items) {
+//    		System.out.println(item);
+//    	}
+    	
+//    	System.out.println(dao.addComment("comment1", 1, 1));
+    	
+//    	List<Item> items = dao.getAllItems();
 //    	for(Item item:items) {
 //    		System.out.println(item);
 //    	}
@@ -501,6 +623,8 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
     		instance = new UsedItemsDaoImpl();
 		return instance;
 	}
+
+	
 
 	
 

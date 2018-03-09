@@ -39,6 +39,12 @@ public class User {
 	public void setItemsList(List<Item> itemsList) {
 		this.itemsList = itemsList;
 	}
+	
+	
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public int getId() {
 		return id;

@@ -7,6 +7,7 @@ public class Comment {
 	private int itemId;
 	private User user;
 	private LocalDate date;
+	
 	public Comment(int id, String commentContent, int itemId, User user,LocalDate date) {
 		super();
 		this.id = id;
