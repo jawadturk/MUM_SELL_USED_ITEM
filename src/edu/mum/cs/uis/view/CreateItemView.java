@@ -12,7 +12,9 @@ import javax.imageio.ImageIO;
 
 import edu.mum.cs.uis.factorymethods.OperationsFactory;
 import edu.mum.cs.uis.model.Category;
+import edu.mum.cs.uis.model.Item;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,6 +25,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -40,7 +43,7 @@ public class CreateItemView extends Stage{
 	// Show Created User ?
 	// Show Item Status ?
 	
-	Stage previousStage;
+	UserHomeView previousStage;
 	
 	List<Category> allCategories;
 	ComboBox<String> categoriesCombo;
@@ -55,11 +58,11 @@ public class CreateItemView extends Stage{
 		return previousStage;
 	}
 
-	public void setPreviousStage(Stage previousStage) {
+	public void setPreviousStage(UserHomeView previousStage) {
 		this.previousStage = previousStage;
 	}
 	
-	public CreateItemView(Stage ps) {
+	public CreateItemView(UserHomeView ps) {
 		previousStage = ps;
     	GridPane grid = new GridPane();
     	VBox vb = new VBox();
@@ -295,5 +298,9 @@ public class CreateItemView extends Stage{
     	return id;
     	
     }
+
+	public void updateUserItemsList() {
+        previousStage.updateUserItemsList();
+	}
     
 }

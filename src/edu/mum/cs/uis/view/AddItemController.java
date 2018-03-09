@@ -6,8 +6,8 @@ import javafx.stage.Stage;
 
 public class AddItemController implements EventHandler<ActionEvent> {
 
-	private Stage sourceStage;
-	public AddItemController(Stage aSourceStage){
+	private UserHomeView sourceStage;
+	public AddItemController(UserHomeView aSourceStage){
 		this.sourceStage = aSourceStage;
 	}
 	

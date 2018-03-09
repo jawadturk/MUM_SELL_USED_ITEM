@@ -38,6 +38,10 @@ public class UserHomeView extends Stage{
 
 	private final Image IMAGE_DEFAULT = new Image(getClass().getResource("default_item_image.png").toExternalForm());
 	
+	ListView<Item> userItemListView, allApprovedItemListView;
+	List<Item> allUserItems, allApprovedItems;
+	int userId;
+	
     /*private Image[] listOfImages = {IMAGE_RUBY, IMAGE_APPLE, IMAGE_VISTA, IMAGE_TWITTER};*/
 
     public Stage getPreviousStage() {
@@ -60,14 +64,13 @@ public class UserHomeView extends Stage{
         
 
         BorderPane borderPane = new BorderPane();
-        /*for (int i = 0; i < 5; i++) {*/
-            Tab tab = new Tab();
-            tab.setText("My Items For Sale");
-            tab.setClosable(false);
-            VBox vvbox = new VBox();
-//            hbox.getChildren().add(new Label("Tab" + i));
+
+            Tab userItemsTab = new Tab();
+            userItemsTab.setText("My Items For Sale");
+            userItemsTab.setClosable(false);
+            VBox userItemsTabBoxLayout = new VBox();
             
-            int userId = 0;
+            userId = 0;
             
             try {
 				userId = LoggedinSession.getInstance().getLoggedinUser().getId();
@@ -77,14 +80,15 @@ public class UserHomeView extends Stage{
 				e1.printStackTrace();
 			}
             
-            List<Item> allApprovedItems = OperationsFactory.getItemsByUserId(userId);
             
-            ListView<Item> listView = new ListView<Item>();
+            allUserItems = OperationsFactory.getItemsByUserId(userId);
             
-            ObservableList<Item> items = FXCollections.observableArrayList(allApprovedItems);
+            userItemListView = new ListView<Item>();
             
-            listView.setItems(items);
-            listView.setCellFactory(param -> new ListCell<Item>() {
+            ObservableList<Item> userItemListViewList = FXCollections.observableArrayList(allUserItems);
+            
+            userItemListView.setItems(userItemListViewList);
+            userItemListView.setCellFactory(param -> new ListCell<Item>() {
                 private ImageView imageView = new ImageView();
                 @Override
                 public void updateItem(Item itemVal, boolean empty) {
@@ -93,14 +97,7 @@ public class UserHomeView extends Stage{
                         setText(null);
                         setGraphic(null);
                     } else {
-                        /*if(name.equals("RUBY"))
-                            imageView.setImage(listOfImages[0]);
-                        else if(name.equals("APPLE"))
-                            imageView.setImage(listOfImages[1]);
-                        else if(name.equals("VISTA"))
-                            imageView.setImage(listOfImages[2]);
-                        else if(name.equals("TWITTER"))
-                            imageView.setImage(listOfImages[3]);*/
+
                     	
                     	Image imageTmp = null; 
                     	
@@ -112,7 +109,8 @@ public class UserHomeView extends Stage{
 						}
                     	imageView.setImage(imageTmp);
                     	imageView.setFitWidth(64);
-                    	imageView.setPreserveRatio(true);
+                    	imageView.setFitHeight(64);
+//                    	imageView.setPreserveRatio(true);
                     	imageView.setSmooth(true);
                     	imageView.setCache(true);
                     	
@@ -125,22 +123,17 @@ public class UserHomeView extends Stage{
             
             
             
-            listView.setOnMousePressed(new ListViewEventHandler(listView));
-            listView.prefHeightProperty().bind(scene.heightProperty());
-            listView.prefWidthProperty().bind(scene.widthProperty());
+            userItemListView.setOnMousePressed(new ListViewEventHandler(userItemListView, "ITEM_VIEW"));
+            userItemListView.prefHeightProperty().bind(scene.heightProperty());
+            userItemListView.prefWidthProperty().bind(scene.widthProperty());
             
-            VBox box = new VBox(listView);
+            VBox box = new VBox(userItemListView);
             box.setAlignment(Pos.CENTER_LEFT);
             box.setFillWidth(true);
-            /*Scene scene = new Scene(box, 200, 200);
-            
-            primaryStage.setWidth(615);
-            primaryStage.setHeight(400);
-            primaryStage.setScene(scene);
-            primaryStage.show();*/
+
 
             Button addItemBtn = new Button("Add Item for Sale");
-            addItemBtn.setOnAction(new AddItemController(ps));
+            addItemBtn.setOnAction(new AddItemController(this));
             HBox addItemBox = new HBox();
             addItemBox.setAlignment(Pos.CENTER_RIGHT);
             addItemBox.setPadding(new Insets(10,10,10,10));
@@ -153,15 +146,90 @@ public class UserHomeView extends Stage{
             itemListLblBox.setPadding(new Insets(0,0,10,10));
             itemListLblBox.getChildren().add(itemListLbl);
             
-            vvbox.getChildren().add(addItemBox);
-            vvbox.getChildren().add(itemListLblBox);
-            vvbox.getChildren().add(box);
+            userItemsTabBoxLayout.getChildren().add(addItemBox);
+            userItemsTabBoxLayout.getChildren().add(itemListLblBox);
+            userItemsTabBoxLayout.getChildren().add(box);
             
             
-            vvbox.setAlignment(Pos.CENTER_LEFT);
-            vvbox.setFillWidth(true);
-            tab.setContent(vvbox);
-            tabPane.getTabs().add(tab);
+            userItemsTabBoxLayout.setAlignment(Pos.CENTER_LEFT);
+            userItemsTabBoxLayout.setFillWidth(true);
+            userItemsTab.setContent(userItemsTabBoxLayout);
+            tabPane.getTabs().add(userItemsTab);
+            
+            /***** Start Second Tab for All Items ******/
+            
+            Tab allItemsTab = new Tab();
+            allItemsTab.setText("All Items For Sale");
+            allItemsTab.setClosable(false);
+            
+            VBox allItemsTabBoxLayout = new VBox();
+            
+            allApprovedItems = OperationsFactory.getAllApprovedItems();
+            
+            allApprovedItemListView = new ListView<Item>();
+            
+            ObservableList<Item> allApprovedItemListViewList = FXCollections.observableArrayList(allApprovedItems);
+            
+            allApprovedItemListView.setItems(allApprovedItemListViewList);
+            allApprovedItemListView.setCellFactory(param -> new ListCell<Item>() {
+                private ImageView imageView = new ImageView();
+                @Override
+                public void updateItem(Item itemVal, boolean empty) {
+                    super.updateItem(itemVal, empty);
+                    if (empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {                    	
+                    	Image imageTmp = null; 
+                    	
+                    	try {
+                    		String imagePath = itemVal.getImg().getPath();
+							imageTmp = new Image(new FileInputStream(imagePath));
+						} catch (FileNotFoundException e) {
+							imageTmp = IMAGE_DEFAULT;
+						}
+                    	imageView.setImage(imageTmp);
+                    	imageView.setFitWidth(64);
+                    	imageView.setFitHeight(64);
+//                    	imageView.setPreserveRatio(true);
+                    	imageView.setSmooth(true);
+                    	imageView.setCache(true);
+                    	
+                    	setText(itemVal.getTitle());
+                        setGraphic(imageView);
+                    }
+                }
+            });
+            
+
+            allApprovedItemListView.setOnMousePressed(new ListViewEventHandler(allApprovedItemListView,"ITEM_VIEW"));
+            allApprovedItemListView.prefHeightProperty().bind(scene.heightProperty());
+            allApprovedItemListView.prefWidthProperty().bind(scene.widthProperty());
+            
+            VBox boxTab2 = new VBox(allApprovedItemListView);
+            boxTab2.setAlignment(Pos.CENTER_LEFT);
+            boxTab2.setFillWidth(true);
+
+            /*Label allApprovedtemListLbl = new Label("All Items List");
+            allApprovedtemListLbl.setStyle("-fx-text-inner-color: black;-fx-font-weight: bold;");
+            HBox allApprovedItemListLblBox = new HBox();
+            allApprovedItemListLblBox.setAlignment(Pos.CENTER_LEFT);
+            allApprovedItemListLblBox.setPadding(new Insets(0,0,10,10));
+            allApprovedItemListLblBox.getChildren().add(allApprovedtemListLbl);
+            allItemsTabBoxLayout.getChildren().add(allApprovedItemListLblBox);*/
+            
+            allItemsTabBoxLayout.getChildren().add(boxTab2);
+            
+            
+            allItemsTabBoxLayout.setAlignment(Pos.CENTER_LEFT);
+            allItemsTabBoxLayout.setFillWidth(true);
+            
+            allItemsTab.setContent(allItemsTabBoxLayout);
+            tabPane.getTabs().add(allItemsTab);
+            
+            
+            /***** End Second Tab for All Items ******/
+            
         /*}*/
         // bind to take available space
         borderPane.prefHeightProperty().bind(scene.heightProperty());
@@ -204,20 +272,20 @@ public class UserHomeView extends Stage{
 
         /***/
         
-        Image image = null;
+        /*Image image = null;
 		try {
 			image = new Image(new FileInputStream("C:\\Users\\Shadi\\Desktop\\shadi_facebook.jpg"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
-        ImageView iv2 = new ImageView();
+        /*ImageView iv2 = new ImageView();
         iv2.setImage(image);
         iv2.setFitWidth(250);
         iv2.setPreserveRatio(true);
         iv2.setSmooth(true);
-        iv2.setCache(true);
+        iv2.setCache(true);*/
         
 //        hboxTab1.getChildren().add(iv2);
         
@@ -230,5 +298,19 @@ public class UserHomeView extends Stage{
         previousStage.hide();
         
 	}
-		
+	
+	public void updateUserItemsList() {
+        allUserItems = OperationsFactory.getItemsByUserId(userId);
+//        userItemListView = new ListView<Item>();
+        
+        ObservableList<Item> items = userItemListView.getItems();
+        userItemListView.setItems(null);
+        
+//        ObservableList<Item> userItemListViewList = FXCollections.observableArrayList(allUserItems);
+        items.setAll(allUserItems);
+        userItemListView.setItems(items);
+        
+        userItemListView.refresh();
+	}
+	
 }

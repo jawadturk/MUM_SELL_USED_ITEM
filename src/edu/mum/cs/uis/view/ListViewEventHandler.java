@@ -9,9 +9,11 @@ import edu.mum.cs.uis.model.Item;
 public class ListViewEventHandler implements EventHandler<MouseEvent> {
 
 	private ListView<Item> listView;
+	private String mode;
 	
-	public ListViewEventHandler(ListView<Item> aListView){
+	public ListViewEventHandler(ListView<Item> aListView, String aMode){
 		this.listView = aListView;
+		this.mode = aMode;
 	}
 
 	@Override
@@ -23,7 +25,16 @@ public class ListViewEventHandler implements EventHandler<MouseEvent> {
 			
 			System.out.println("clicked on item: " + tmpItem.getTitle());
 			Stage stage = (Stage) listView.getScene().getWindow();
-			new GeneralItemView(stage, tmpItem);
+			
+			
+			if("ITEM_VIEW".equals(mode)) {
+				new GeneralItemView(stage, tmpItem);
+			}else if("ITEM_EDIT".equals(mode))  {
+				new EditItemStatusView((AdminHomeView)stage, tmpItem);
+			}
+			
+			
+			
 		}
 
 	}

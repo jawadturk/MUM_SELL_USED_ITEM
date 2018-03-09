@@ -25,14 +25,14 @@ public class CreateItemController implements EventHandler<ActionEvent> {
 		if("ADD".equals(source)) {
 			try {			
 				
-				System.out.println("Data: ");
+				/*System.out.println("Data: ");
 				
 				System.out.println("Item Name: " + sourceStage.getItemName());
 				System.out.println("Item Desc: " + sourceStage.getItemDesc());
 				System.out.println("Item Price: " + sourceStage.getItemPrice()); 
 				System.out.println("Item Image: " + sourceStage.getUploadedImage().getPath()); 
 				System.out.println("Item Category: " + sourceStage.getSelectedCategory());
-				System.out.println("Item User ID: " + sourceStage.getUserId());
+				System.out.println("Item User ID: " + sourceStage.getUserId());*/
 				
 				
 				boolean status = OperationsFactory.addItem(
@@ -47,6 +47,7 @@ public class CreateItemController implements EventHandler<ActionEvent> {
 					throw new RuleException("Could not Add Item !");
 				}
 				
+				sourceStage.updateUserItemsList();				
 				sourceStage.hide();
 				
 			} catch (RuleException e) {

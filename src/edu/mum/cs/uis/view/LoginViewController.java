@@ -77,7 +77,7 @@ public class LoginViewController {
 					LoggedinSession.getInstance().setLoggedinUser(loggedinUser);
 					
 					if(loggedinUser.isAdmin()){
-						
+						new AdminHomeView(stage);
 					}else {
 						new UserHomeView(stage);
 					}
