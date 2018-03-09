@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Thu Mar 08 16:28:38 CST 2018:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.2 - (1629631): instance a816c00e-0162-07bb-00f0-00000e94c940 
+Thu Mar 08 18:52:27 CST 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.2 - (1629631): instance a816c00e-0162-083e-ac43-00000e94c770 
 on database directory D:\MyWork\workspace-oxygen\git\MUM_SELL_USED_ITEM\database\UsedItemsDB with class loader sun.misc.Launcher$AppClassLoader@6d06d69c 
 Loaded from file:/D:/MyWork/workspace-oxygen/git/MUM_SELL_USED_ITEM/lib/derby.jar
 java.vendor=Oracle Corporation

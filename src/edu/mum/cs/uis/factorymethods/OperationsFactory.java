@@ -28,7 +28,7 @@ public class OperationsFactory {
 	public static User register(String userName,String password,String firstName, String lastName)throws RuleException
 	{
 		Validate.validateSignUpCredentials(userName, password, firstName, lastName);
-		return UsedItemsDaoImpl.getInstance().registerNewUser(new User( firstName, lastName,userName, password,false));
+		return UsedItemsDaoImpl.getInstance().registerNewUser(new User(0, firstName, lastName,userName, password,false));
 		
 	}
 	

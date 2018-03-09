@@ -10,7 +10,7 @@ public class ExecuteQuery {
 
 	public static void main(String[] args) {
 
-		User user = new User("firstName", "lastName", "userName", "password", false);
+//		User user = new User("firstName", "lastName", "userName", "password", false);
 		UsedItemsDao dao = UsedItemsDaoImpl.getInstance();
 
 		// dao.registerNewUser(user);

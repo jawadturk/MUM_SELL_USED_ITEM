@@ -13,8 +13,9 @@ public class User {
 	private boolean isAdmin;
 	private List<Item> itemsList;
 	
-	public User( String firstName, String lastName, String userName, String password, boolean isAdmin) {
+	public User( int id,String firstName, String lastName, String userName, String password, boolean isAdmin) {
 		super();
+		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.userName = userName;
@@ -72,7 +73,7 @@ public class User {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "firstName: " + firstName + ", lastName: " + lastName + ", userName: " + userName + ", password: " + password + ",isAdmin: " + isAdmin;
+		return "id: "+ id +", firstName: " + firstName + ", lastName: " + lastName + ", userName: " + userName + ", password: " + password + ",isAdmin: " + isAdmin;
 	}
 
 }

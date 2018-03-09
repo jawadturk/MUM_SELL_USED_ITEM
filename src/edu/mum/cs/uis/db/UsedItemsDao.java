@@ -21,5 +21,9 @@ public interface UsedItemsDao {
 	public Item getItemDetailsById(int itemId);
 	public boolean updateItemStatusById(int itemId, Status status);
 	
+	
+	public boolean addComment(String comment, int itemId, int userId);
+	
+	
 
 }

@@ -29,6 +29,7 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 	}
 	
 	public User registerNewUser(User user) {
+		
 		Connection conn = dbConnection.getConnection();
 		PreparedStatement pstmt = null;
 		try {
@@ -55,6 +56,7 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
             }
         }
 		return null;
+		
 	}	
 	
 
@@ -75,12 +77,13 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 				String firstName = rs.getString("FIRSTNAME");
 				String lastName = rs.getString("LASTNAME");
 				boolean isAdmin = rs.getBoolean("ISADMIN");
+				int id = rs.getInt("USERID");
 				
 				User user = null;
 				if(isAdmin)
-					user = new Admin(firstName,lastName,userName,password);
+					user = new Admin(id, firstName,lastName,userName,password);
 				else
-					user = new User(firstName,lastName,userName,password,isAdmin);
+					user = new User(id, firstName,lastName,userName,password,isAdmin);
 				
 				return user;
 			}
@@ -403,7 +406,11 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 		return false;
 	}
 
-	
+	@Override
+	public boolean addComment(String comment, int itemId, int userId) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
     public static void printSQLException(SQLException e)
     {
@@ -446,22 +453,22 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
     
     public static void main(String[] args) {
     	
-    	User user = new User( "firstName", "lastName", "userName", "password",false);
+    	User user = new User(0, "firstName", "lastName", "userName", "password",false);
     	UsedItemsDao dao = new UsedItemsDaoImpl();
     	
 //    	dao.registerNewUser(user);
     	
-//    	System.out.println(dao.validateLogin("userName", "password"));
+    	System.out.println(dao.validateLogin("userName", "password"));
 //    	System.out.println(dao.validateLogin("userName1", "password"));
 //    	dao.addCategory("VEHICLE");
 //    	dao.addCategory("ELECTRONICS");
 //    	dao.addCategory("LAPTOP1");
     	
-    	List<Category> cats = new ArrayList<>();
-    	cats = dao.getCategories();
-    	for(Category c:cats) {
-    		System.out.println(c);
-    	}
+//    	List<Category> cats = new ArrayList<>();
+//    	cats = dao.getCategories();
+//    	for(Category c:cats) {
+//    		System.out.println(c);
+//    	}
     	
 //    	Image img = new Image(0, "/x/y/z");
 //    	Category category = new Category(2, "VEHICLE");
@@ -481,12 +488,12 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 //    	System.out.println(dao.getItemDetailsById(101));
     	
     	
-    	System.out.println(dao.updateItemStatusById(101,Status.REJECTED));
-    	
-    	List<Item> items = dao.getAllItemsByUserId(1);
-    	for(Item item:items) {
-    		System.out.println(item);
-    	}
+//    	System.out.println(dao.updateItemStatusById(101,Status.REJECTED));
+//    	
+//    	List<Item> items = dao.getAllItemsByUserId(1);
+//    	for(Item item:items) {
+//    		System.out.println(item);
+//    	}
 	}
     
     public static UsedItemsDaoImpl getInstance() {
@@ -494,6 +501,8 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
     		instance = new UsedItemsDaoImpl();
 		return instance;
 	}
+
+	
 
 	
 	
