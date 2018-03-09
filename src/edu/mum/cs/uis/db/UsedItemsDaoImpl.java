@@ -12,6 +12,7 @@ import java.util.List;
 
 import edu.mum.cs.uis.model.Admin;
 import edu.mum.cs.uis.model.Category;
+import edu.mum.cs.uis.model.Comment;
 import edu.mum.cs.uis.model.Image;
 import edu.mum.cs.uis.model.Item;
 import edu.mum.cs.uis.model.Status;
@@ -337,11 +338,12 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 		
 		Connection conn = dbConnection.getConnection();
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		ResultSet rs,rs2 = null;
 		Item item = null;
+		String selectSQL = null;
 		
 		try {
-			String selectSQL = "SELECT itm.*, img.PATH, cat.NAME AS CATNAME from ITEMS itm,IMAGES img, CATEGORIES cat WHERE itm.IMGID = img.IMGID AND itm.CATID = cat.CATID AND itm.ITEMID = ?";
+			selectSQL = "SELECT itm.*, img.PATH, cat.NAME AS CATNAME from ITEMS itm,IMAGES img, CATEGORIES cat WHERE itm.IMGID = img.IMGID AND itm.CATID = cat.CATID AND itm.ITEMID = ?";
 			pstmt = conn.prepareStatement(selectSQL);
 			pstmt.setInt(1, itemId);
 			
@@ -369,6 +371,27 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 				Image img = new Image(imgId, imgPath);
 				
 				item = new Item(title, description, price, creationDate.toLocalDate(), status, img, cat, userId);
+				
+				
+				selectSQL = "SELECT * from COMMENTS C WHERE ITEMID = ?";
+				pstmt = conn.prepareStatement(selectSQL);
+				pstmt.setInt(1, itemId);
+				
+				rs = pstmt.executeQuery();
+				
+				List<Comment> comments = new ArrayList<Comment>();
+				while(rs.next()) {
+					
+					int cmntId = rs.getInt("CMNTID");
+					int cmntUserId = rs.getInt("USERID");
+//					int id = rs.getInt("ITEMID");
+					String cmntContent = rs.getString("CMNTEXT");
+					Date cmntCreationDate = rs.getDate("CREATIONDATE");
+					Comment cmnt = new Comment(id,cmntContent, itemId,null,cmntCreationDate.toLocalDate());
+					comments.add(cmnt);
+				}
+				item.setComments(comments);
+				
 			}
 			
 			
@@ -577,7 +600,7 @@ public class UsedItemsDaoImpl implements UsedItemsDao {
 //    		System.out.println(item);
 //    	}
     	
-//    	System.out.println(dao.getItemDetailsById(101));
+    	System.out.println(dao.getItemDetailsById(1));
     	
     	
 //    	System.out.println(dao.updateItemStatusById(101,Status.REJECTED));

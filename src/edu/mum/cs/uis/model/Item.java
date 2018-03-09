@@ -114,6 +114,12 @@ public class Item {
 		this.userId = userId;
 	}
 	
+	
+	
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
 	@Override
 	public String toString() {
 		return "id: " + id + ", title: " + title + ", description: " + description + ", img.path: " + 
