@@ -30,13 +30,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package edu.mum.cs.uis.view;
+package edu.mum.cs.uis.view.control;
 
 import java.io.IOException;
 
 import edu.mum.cs.uis.factorymethods.OperationsFactory;
 import edu.mum.cs.uis.model.User;
 import edu.mum.cs.uis.ruleset.RuleException;
+import edu.mum.cs.uis.view.AdminHomeView;
+import edu.mum.cs.uis.view.UserHomeView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -114,7 +116,7 @@ public class LoginViewController {
 		if (event.getSource() == signUpBtn){
 			stage = (Stage) signUpBtn.getScene().getWindow();
 			try {
-				root = FXMLLoader.load(getClass().getResource("register_user_view.fxml"));
+				root = FXMLLoader.load(getClass().getResource("../register_user_view.fxml"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

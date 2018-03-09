@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 
 import edu.mum.cs.uis.factorymethods.OperationsFactory;
 import edu.mum.cs.uis.model.Category;
+import edu.mum.cs.uis.view.control.CreateItemCategoryController;
+import edu.mum.cs.uis.view.control.LoggedinSession;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;

@@ -1,5 +1,7 @@
-package edu.mum.cs.uis.view;
+package edu.mum.cs.uis.view.control;
 
+import edu.mum.cs.uis.view.AdminHomeView;
+import edu.mum.cs.uis.view.CreateItemCategoryView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 

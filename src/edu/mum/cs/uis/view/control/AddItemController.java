@@ -1,5 +1,7 @@
-package edu.mum.cs.uis.view;
+package edu.mum.cs.uis.view.control;
 
+import edu.mum.cs.uis.view.CreateItemView;
+import edu.mum.cs.uis.view.UserHomeView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;

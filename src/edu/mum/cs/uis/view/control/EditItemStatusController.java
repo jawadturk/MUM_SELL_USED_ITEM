@@ -1,18 +1,19 @@
-package edu.mum.cs.uis.view;
+package edu.mum.cs.uis.view.control;
 
 import edu.mum.cs.uis.factorymethods.OperationsFactory;
 import edu.mum.cs.uis.ruleset.RuleException;
+import edu.mum.cs.uis.view.EditItemStatusView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
-public class CreateItemCategoryController  implements EventHandler<ActionEvent> {
+public class EditItemStatusController implements EventHandler<ActionEvent> {
 
-	private CreateItemCategoryView sourceStage;
+	private EditItemStatusView sourceStage;
 	private String source ;
 	
-	public CreateItemCategoryController(CreateItemCategoryView aSourceStage, String aSource){
+	public EditItemStatusController(EditItemStatusView aSourceStage, String aSource){
 		this.sourceStage = aSourceStage;
 		this.source = aSource;
 	}
@@ -22,36 +23,38 @@ public class CreateItemCategoryController  implements EventHandler<ActionEvent> 
 
 		
 		System.out.println("Button Pressed Source: " + source);
-		if("ADD".equals(source)) {
+		
 			try {			
 				
 				System.out.println("Data: ");
 				
-				System.out.println("Item Category Name: " + sourceStage.getItemCategoryName());
+				System.out.println("Item ID: " + sourceStage.getItemId());
 				
+				boolean status = false;
+				 
 				
-				OperationsFactory.addCategory(sourceStage.getItemCategoryName());
+				if("APPROVE".equals(source)) {
+					status = OperationsFactory.approveItem(sourceStage.getItemId());
+				}else if("REJECT".equals(source)) {
+					status = OperationsFactory.diApproveItem(sourceStage.getItemId());
+				}
+						
 				
-				/*if(!status) {
-					throw new RuleException("Could not Add Item Category !");
-				}*/
+				if(!status) {
+					throw new RuleException("Could not Add Item !");
+				}
 				
-				sourceStage.updateItemCategoriesList();				
+				sourceStage.updatePendingItemsList();				
 				sourceStage.hide();
 				
 			} catch (RuleException e) {
 				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Add Item Category Error");
+				alert.setTitle("Edit Item Status Error");
 	//			alert.setHeaderText("Look, an Error Dialog");
 				alert.setContentText(e.getMessage());
 				alert.showAndWait();
 			}			
 			
-		}else if("CANCEL".equals(source)) {
-			sourceStage.hide();
 		}
 		
-		
-	}
-
 }

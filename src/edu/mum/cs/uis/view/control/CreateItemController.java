@@ -1,7 +1,8 @@
-package edu.mum.cs.uis.view;
+package edu.mum.cs.uis.view.control;
 
 import edu.mum.cs.uis.factorymethods.OperationsFactory;
 import edu.mum.cs.uis.ruleset.RuleException;
+import edu.mum.cs.uis.view.CreateItemView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;

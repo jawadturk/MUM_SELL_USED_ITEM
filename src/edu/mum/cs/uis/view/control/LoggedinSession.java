@@ -1,4 +1,4 @@
-package edu.mum.cs.uis.view;
+package edu.mum.cs.uis.view.control;
 
 import edu.mum.cs.uis.db.DBConnection;
 import edu.mum.cs.uis.model.User;
